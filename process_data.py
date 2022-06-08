@@ -66,15 +66,18 @@ def get_training_data(audio_filename, annotations_filename, channel_number):
   d = dict()
   for call_type in CallType:
     d[call_type] = []
-  for start_time, _, call_type in lines:
-    start_index = timestamp_to_frame(start_time, sampling_rate)
+  for start_time, end_time, call_type in lines:
     duration_frames = timestamp_to_frame(call_type.duration, sampling_rate)
+    avg_time = (start_time + end_time)/2
+    avg_index = timestamp_to_frame(avg_time, sampling_rate)
+    start_index = avg_index - math.floor(duration_frames/2)
     end_index = start_index + duration_frames
+    sub_vec = audio_vec[start_index : end_index]
+    if len(sub_vec) != duration_frames:
+      continue
     for roll in ROLLS:
       roll_frames = math.floor(duration_frames * roll)
-      sub_vec = audio_vec[start_index + roll_frames : end_index + roll_frames]
-      if len(sub_vec) == duration_frames:
-        d[call_type].append(sub_vec)
+      d[call_type].append(np.roll(sub_vec, roll_frames))
 
   return d
 

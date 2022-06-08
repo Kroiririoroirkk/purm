@@ -11,17 +11,18 @@ def parse_output_line(s):
   s -- the line
 
   Returns:
-  A 2-tuple of the start timestamp (in seconds) and the end timestamp (in seconds).
+  A 3-tuple of the start timestamp (in seconds), the end timestamp (in seconds), and the signal-to-interference-and-noise ratio (in dB).
 
   Raises:
   A ValueError if the input line is ill-formed.
   """
   try:
-    start_time, end_time = s.strip().split(',')
+    start_time, end_time, sinr = s.strip().split(',')
   except ValueError:
     raise ValueError("Ill-formed input line: " + s)
   return (float(start_time.strip()),
-          float(end_time.strip()))
+          float(end_time.strip()),
+          float(sinr.strip()))
 
 
 def within_any(n, intervals):
@@ -54,6 +55,7 @@ def validate(annotations_filename, output_filename, call_type):
 
   with open(output_filename, 'r') as f:
     output_lines = [parse_output_line(s) for s in f.read().strip().split('\n')]
+  output_lines = [(s,e) for s,e,_ in output_lines]
 
   true_positive_count = 0
   for start_time, end_time in annotation_lines:

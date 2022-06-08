@@ -1,4 +1,3 @@
-from datetime import datetime
 import math
 import numpy as np
 import scipy.io.wavfile
@@ -21,7 +20,7 @@ def detect_sounds(audio_filename, dictionary_filename, k, threshold, channel_num
   threshold -- determines how sensitive the algorithm is (in dB)
 
   Returns:
-  A list of 2-tuples, where the first entry in each tuple represents the start time and the second entry represents the end time. Raises an error if the audio is not at the expected sampling rate of 48 kHz.
+  A list of 3-tuples, where the first entry in each tuple represents the start time, the second entry represents the end time, and the third entry represents the signal-to-interference-and-noise ratio (in dB). Raises an error if the audio is not at the expected sampling rate of 48 kHz.
   """
   sampling_rate, audio_vec = scipy.io.wavfile.read(audio_filename)
   if sampling_rate != 48000:
@@ -50,8 +49,7 @@ def detect_sounds(audio_filename, dictionary_filename, k, threshold, channel_num
     if sinr > real_threshold:
       start_time = pointer/sampling_rate
       end_time = start_time + sample_length/sampling_rate
-      timestamps.append((start_time, end_time))
-      print(sinr)
+      timestamps.append((start_time, end_time, 10*math.log(sinr, 10)))
     pointer += math.floor(sample_length/4)
   return timestamps
 
@@ -61,5 +59,5 @@ if __name__ == '__main__':
   call_type = CallType.from_str(sys.argv[2])
   dictionary_filename = f'dictionaries/{call_type.filename}.csv'
   times = detect_sounds(audio_filename, dictionary_filename, call_type.sparsity, call_type.threshold)
-  np.savetxt(f'./output/{sys.argv[2]}{datetime.now()}.csv', times, fmt='%.2f', delimiter=',')
+  np.savetxt(f'./output/plot.csv', times, fmt='%.2f', delimiter=',')
 
