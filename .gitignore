@@ -6,7 +6,8 @@
 /share
 /video_annotations
 pyvenv.cfg
-/audio/*
-/dictionaries/*
-/training_data/*
-/output/*
+/annotations
+/audio
+/dictionaries
+/training_data
+/output
