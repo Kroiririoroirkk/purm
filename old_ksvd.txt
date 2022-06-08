@@ -1,0 +1,16 @@
+    """
+    Old implementation
+      err = np.column_stack(dataset)
+      for j in range(n):
+        if i == j:
+          continue
+        err = err - (d_new[:, [j]] @ x_new[[j], :])
+      indices = [j for j in range(len(dataset)) if x_new[i][j]]
+      err = err[:, indices]
+      u, s, vt = np.linalg.svd(err)
+      d_new[:,i] = u[:,0]
+      new_row = np.zeros((1,x_new.shape[1]))
+      for l, j in enumerate(indices):
+        new_row[0,j] = vt[0,l] * s[0]
+      x_new[i] = new_row
+    """
