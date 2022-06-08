@@ -70,4 +70,4 @@ def plot_output_data(audio_filename='audio/aviary_2019-05-01_1556722860.000-1556
 
 #plot_training_data()
 #plot_dictionary_data()
-plot_output_data()
+#plot_output_data()

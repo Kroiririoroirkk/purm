@@ -9,10 +9,6 @@ import matplotlib.pyplot as plt
 # sensitivities = [1.0000, 0.8678, 0.6488, 0.2149]
 # specificities = [0.1329, 0.1980, 0.2611, 0.3966]
 # thresholds = [-35, -28, -25, -20]
-
-### With bandpass filter (again)
-sensitivities = [0.8678, 0.3430, 0.0207]
-specificities = [0.2787, 0.3942, 0.2857]
 thresholds = [-25, -20, -15]
 tpr = sensitivities
 fpr = [1-s for s in specificities]

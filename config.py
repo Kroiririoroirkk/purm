@@ -1,11 +1,11 @@
 import enum
 
 
-ROLLS = [0]
+ROLLS = [0, -1/16, -1/8, -3/16]
 
 
 class CallType(enum.Enum):
-  WHISTLE = ('whistle', 0.7, 5, 50, -15) # modify sparsity, dict_size, and threshold later, previously 1.3 s
+  WHISTLE = ('whistle', 0.7, 3, 40, -23) # modify sparsity, dict_size, and threshold later, previously 1.3 s
   SONG = ('song', 1.3, 2, 5, -9)
   CHATTER = ('chatter', 2.5, 3, 30, -9)
   BURBLE = ('burble', 0.8, 2, 3, -9)
