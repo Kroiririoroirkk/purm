@@ -59,5 +59,5 @@ if __name__ == '__main__':
   call_type = CallType.from_str(sys.argv[2])
   dictionary_filename = f'dictionaries/{call_type.filename}.csv'
   times = detect_sounds(audio_filename, dictionary_filename, call_type.sparsity, call_type.threshold)
-  np.savetxt(f'./output/plot.csv', times, fmt='%.2f', delimiter=',')
+  np.savetxt(f'./output/output.csv', times, fmt='%.2f', delimiter=',')
 
