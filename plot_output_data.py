@@ -4,11 +4,11 @@ import numpy as np
 import scipy.io.wavfile
 import sounddevice as sd
 
-from process_data import timestamp_to_frame
+from extract_training_data import timestamp_to_frame
 from validation import parse_output_line
 
 
-def plot_output_data(audio_filename='audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav', channel_number=8, output_filename='output/plot.csv'):
+def plot_output_data(audio_filename='audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav', channel_number=8, output_filename='output/output.csv'):
   """Plots the output data as spectograms.
 
   Keyword arguments:

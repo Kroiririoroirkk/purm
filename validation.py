@@ -1,7 +1,7 @@
 import sys
 
 from config import CallType
-from process_data import parse_line
+from extract_training_data import parse_line
 
 
 def parse_output_line(s):

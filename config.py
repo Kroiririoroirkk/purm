@@ -3,9 +3,11 @@ import enum
 
 ROLLS = [-1/8, -1/16, 0, 1/16, 1/8]
 
+KSVD_ITERS = 60
+
 
 class CallType(enum.Enum):
-  WHISTLE = ('whistle', 0.6, 3, 50, -23) # modify sparsity, dict_size, and threshold later, used to be 0.7 s
+  WHISTLE = ('whistle', 0.6, 6, 50, -33) # modify sparsity, dict_size, and threshold later, used to be 0.7 s
   SONG = ('song', 1.3, 2, 5, -9)
   CHATTER = ('chatter', 2.5, 3, 30, -9)
   BURBLE = ('burble', 0.8, 2, 3, -9)

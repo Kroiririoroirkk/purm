@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import random
 from sklearn.cluster import KMeans
@@ -96,14 +97,14 @@ def omp(a, y, k, precompute=True):
     return orthogonal_mp(a, y, n_nonzero_coefs=k, precompute=precompute)
 
 
-def ksvd(k, n, dataset, iters=50):
+def ksvd(k, n, dataset, iters):
   """Generate a dictionary through the k-SVD algorithm for a dataset.
   
   Keyword arguments:
   k -- the maximum support size of the sparse representations
   n -- the size of the dictionary
   dataset -- a list of numpy vectors (shape (m,))
-  iters -- a number that determines how many loops to go through (default 30)
+  iters -- a number that determines how many loops to go through
   
   Returns:
   A 2-tuple of an dictionary matrix (shape (m,n)) and a sparse representation matrix (shape (n,len(dataset)))
@@ -113,6 +114,8 @@ def ksvd(k, n, dataset, iters=50):
   d = normalize(d, axis=0) # Normalizes the columns (l2 norm)
   dataset_matr = np.column_stack(dataset)
 
+  trials = []
+  errs = []
   for iter_n in range(iters):
     print('Iteration ' + str(iter_n+1))
     # Assignment step
@@ -122,13 +125,22 @@ def ksvd(k, n, dataset, iters=50):
     for i in range(n):
       d[:, i] = np.zeros(d.shape[0])
       indices = [j for j in range(len(dataset)) if x[i][j]]
-      x_col = x[[i], indices]
+      x_col = x[i, indices]
       selected_signals = dataset_matr[:, indices]
       d_col = (selected_signals - (d @ x[:, indices])) @ x_col
       d_col = d_col / np.linalg.norm(d_col)
-      x_col = (selected_signals.transpose() - (d @ x[:, indices]).transpose()) @ d_col
+      x_col = (selected_signals - (d @ x[:, indices])).transpose() @ d_col
       d[:, i] = d_col
-      x[i, indices] = x_col.transpose()
+      x[i, indices] = x_col
+
+    # Calculate reconstruction errors
+    dataset_calc = d @ x
+    for i in range(len(dataset)):
+      trials.append(iter_n)
+      errs.append(l2dist(dataset_calc[:, i], dataset_matr[:, i]))
+
+  plt.scatter(trials, errs)
+  plt.show()
 
   return d, x
 
