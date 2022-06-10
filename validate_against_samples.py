@@ -61,7 +61,7 @@ def validate_against_samples(vec_dict, call_type, sampling_rate=48000, plot=True
           false_positive_count += 1
           if plot:
             plt.specgram(vec, Fs=sampling_rate)
-            plt.title(f'False positive, SINR (dB): {10*math.log(sinr,10):.2f}')
+            plt.title(f'False positive, True identity: {call_type2.filename}, SINR (dB): {10*math.log(sinr,10):.2f}')
             button_axes = plt.axes([0.81, 0.05, 0.1, 0.075])
             button = Button(button_axes, 'Play')
             button.on_clicked(lambda _: sd.play(vec, sampling_rate))

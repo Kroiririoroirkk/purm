@@ -2,11 +2,12 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 import numpy as np
 import sounddevice as sd
+import sys
 
 from config import CallType
 
 
-def plot_training_data(sampling_rate=48000):
+def plot_training_data(sampling_rate=48000, call_types=CallType):
   """Plots the training data as spectograms.
 
   Keyword arguments:
@@ -16,7 +17,7 @@ def plot_training_data(sampling_rate=48000):
   Nothing. Displays spectograms.
   """
 
-  for call_type in CallType:
+  for call_type in call_types:
     vecs = np.loadtxt(f'training_data/{call_type.filename}.csv', delimiter=',', dtype=np.int16)
     for vec in vecs:
       plt.specgram(vec, Fs=sampling_rate)
@@ -28,4 +29,10 @@ def plot_training_data(sampling_rate=48000):
 
 
 if __name__ == '__main__':
-  plot_training_data()
+  call_types = []
+  for arg in sys.argv[1:]:
+    call_types.append(CallType.from_str(arg))
+  if call_types:
+    plot_training_data(call_types=call_types)
+  else:
+    plot_training_data()

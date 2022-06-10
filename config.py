@@ -37,8 +37,8 @@ class CallType(enum.Enum):
       'whsitle': CallType.WHISTLE,
       'w': CallType.WHISTLE,
       'whistle?': CallType.WHISTLE,
-      's': CallType.SONG,
-      'song': CallType.SONG,
+      's': CallType.WHISTLE, # try merging songs and whistles?
+      'song': CallType.WHISTLE, # try merging songs and whistles?
       'c': CallType.CHATTER,
       'chatter': CallType.CHATTER,
       'rattle': CallType.CHATTER,
