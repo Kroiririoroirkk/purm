@@ -43,4 +43,6 @@ Finally, spectograms of the algorithmically detected calls can be viewed using `
 
 The script `validation.py` is the main entry point for this step. Given an annotations file and an output file, it compares the two and calculates the sensitivity (true positive rate) and specificity (one minus the false positive rate) of the test, where both are ratios from 0% to 100%.
 
+The script `validate_against_samples.py` is designed to test the detection algorithm against short audio samples which are already annotated.
+
 The `make_roc_curve.py` file allows for convenient generation of receiver operating characteristic curve graphs.
