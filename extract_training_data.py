@@ -2,9 +2,10 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.io.wavfile
+import sys
 
 from config import CallType, ROLLS
-from preprocessing import highpass_filter, lowpass_filter
+from preprocessing import preprocess
 
 
 def parse_line(s):
@@ -56,9 +57,7 @@ def get_training_data(audio_filename, annotations_filename, channel_number):
   if sampling_rate != 48000:
     raise ValueError('The audio is not at the expected sampling rate of 48 kHz.')
   audio_vec = audio_vec[:, channel_number] # ignore all channels except one
-  audio_vec = highpass_filter(audio_vec)
-  audio_vec = lowpass_filter(audio_vec)
-  # audio_vec, sampling_rate = convert_to_baseband(audio_vec, 7800, 9600, new_fs=12000)
+  audio_vec, sampling_rate = preprocess(audio_vec, sampling_rate)
 
   with open(annotations_filename, 'r') as f:
     lines = [parse_line(s) for s in f.read().strip().split('\n')]
@@ -83,6 +82,8 @@ def get_training_data(audio_filename, annotations_filename, channel_number):
 
 
 if __name__ == '__main__':
-  vec_d = get_training_data('audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav', 'annotations/aviary_2019-05-01_1556722860.000-1556723760.000.txt', 8)
+  audio_file = sys.argv[1]
+  annotations_file = sys.argv[2]
+  vec_d = get_training_data(audio_file, annotations_file, 8)
   for call_type, vecs in vec_d.items():
     np.savetxt(f'training_data/{call_type.filename}.csv', vecs, delimiter=',', fmt='%d')

@@ -7,10 +7,10 @@ KSVD_ITERS = 50
 
 
 class CallType(enum.Enum):
-  WHISTLE = ('whistle', 0.6, 3, 50, -33) # modify sparsity, dict_size, and threshold later, used to be 0.7 s
+  WHISTLE = ('whistle', 0.5, 3, 50, -27) # modify sparsity, dict_size, and threshold later, used to be 0.7 s
   SONG = ('song', 1.3, 2, 5, -9)
-  CHATTER = ('chatter', 2.5, 3, 30, -9)
-  BURBLE = ('burble', 0.8, 2, 3, -9)
+  CHATTER = ('chatter', 1.5, 3, 30, -35)
+  BURBLE = ('burble', 0.2, 2, 3, -9)
   CHUCK = ('chuck', 0.18, 2, 5, -9)
 
   def __init__(self, filename, duration, sparsity, dict_size, threshold):
@@ -37,11 +37,12 @@ class CallType(enum.Enum):
       'whsitle': CallType.WHISTLE,
       'w': CallType.WHISTLE,
       'whistle?': CallType.WHISTLE,
-      's': CallType.WHISTLE, # try merging songs and whistles?
-      'song': CallType.WHISTLE, # try merging songs and whistles?
+      's': CallType.SONG, # try merging songs and whistles?
+      'song': CallType.SONG, # try merging songs and whistles?
       'c': CallType.CHATTER,
       'chatter': CallType.CHATTER,
       'rattle': CallType.CHATTER,
+      'b': CallType.BURBLE,
       'burble': CallType.BURBLE,
       'chuck': CallType.CHUCK,
     }

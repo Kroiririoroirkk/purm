@@ -42,7 +42,7 @@ def lowpass_filter(data, cutoff=12600, fs=48000, order=5):
   return filtfilt(b, a, data)
 
 
-def convert_to_baseband(data, center_freq, bandwidth, fs=48000, new_fs=None):
+def convert_to_baseband(data, center_freq, bandwidth, fs, new_fs=None):
   """Converts the data to baseband and downsamples it.
 
   Keyword arguments:
@@ -52,7 +52,8 @@ def convert_to_baseband(data, center_freq, bandwidth, fs=48000, new_fs=None):
   fs -- the sampling rate
 
   Returns:
-  A 2-tuple of the downsampled data as a numpy array and the new sampling rate. Raises a ValueError if bandwidth does not divide fs."""
+  A 2-tuple of the downsampled data as a numpy array and the new sampling rate. Raises a ValueError if bandwidth does not divide fs.
+  """
   if fs % bandwidth != 0:
     raise ValueError('Bandwidth does not divide the sampling rate.')
   if new_fs is None:
@@ -62,3 +63,18 @@ def convert_to_baseband(data, center_freq, bandwidth, fs=48000, new_fs=None):
   baseband_signal = block_reduce(baseband_signal, block_size=(floor(fs/new_fs),), func=np.mean)
   return (baseband_signal.real, new_fs)
 
+
+def preprocess(audio_vec, fs):
+  """Preprocesses the audio vector.
+
+  Keyword arguments:
+  audio_vec -- the audio vector as a numpy array
+  fs -- the sampling rate
+
+  Returns:
+  A 2-tuple of the new audio vector and the sampling rate.
+  """
+  audio_vec = highpass_filter(audio_vec)
+  audio_vec = lowpass_filter(audio_vec)
+  # audio_vec, fs = convert_to_baseband(audio_vec, 7800, 9600, fs, new_fs=12000)
+  return audio_vec, fs

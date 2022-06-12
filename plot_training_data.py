@@ -12,6 +12,7 @@ def plot_training_data(sampling_rate=48000, call_types=CallType):
 
   Keyword arguments:
   sampling_rate -- sampling rate in Hz (default 48000)
+  call_types -- a list of CallTypes to display (default all)
 
   Returns:
   Nothing. Displays spectograms.

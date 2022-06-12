@@ -91,7 +91,11 @@ if __name__ == '__main__':
       plot = False
   except IndexError:
     pass
-  vec_dict = get_training_data(audio_filename, annotations_filename, 15)
+  if audio_filename == 'audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav':
+    channel = 8
+  elif audio_filename == 'audio/aviary_2019-06-01_1559399640.000-1559400540.000_audio.wav':
+    channel = 15
+  vec_dict = get_training_data(audio_filename, annotations_filename, channel)
   sensitivity, specificity = validate_against_samples(vec_dict, call_type, plot=plot)
   print(f'The sensitivity is {sensitivity:.2%}.')
   print(f'The specificity is {specificity:.2%}.')
