@@ -7,9 +7,9 @@ KSVD_ITERS = 50
 
 
 class CallType(enum.Enum):
-  WHISTLE = ('whistle', 0.5, 3, 50, -27) # modify sparsity, dict_size, and threshold later, used to be 0.7 s
+  WHISTLE = ('whistle', 0.5, 3, 50, -25) # modify sparsity, dict_size, and threshold later, used to be 0.7 s
   SONG = ('song', 1.3, 2, 5, -9)
-  CHATTER = ('chatter', 1.5, 3, 30, -35)
+  CHATTER = ('chatter', 1.5, 14, 120, -25)
   BURBLE = ('burble', 0.2, 2, 3, -9)
   CHUCK = ('chuck', 0.18, 2, 5, -9)
 

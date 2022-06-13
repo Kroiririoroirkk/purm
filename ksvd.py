@@ -142,5 +142,7 @@ def ksvd(k, n, dataset, iters):
   plt.scatter(trials, errs)
   plt.show()
 
+  print('Final error: ' + str(frobdist(dataset_matr, d @ x)))
+
   return d, x
 
