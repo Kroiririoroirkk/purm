@@ -79,7 +79,6 @@ def _gram_omp(Gram, Xy, n_nonzero_coefs):
     lam = np.argmax(np.abs(alpha))
     if lam < n_active or alpha[lam] * np.conj(alpha[lam]) < min_float:
       # selected same atom twice, or inner product too small
-      warnings.warn(premature, RuntimeWarning, stacklevel=3)
       break
     if n_active > 0:
       L[n_active, :n_active] = Gram[lam, :n_active]
@@ -94,7 +93,6 @@ def _gram_omp(Gram, Xy, n_nonzero_coefs):
       v = nrm2(L[n_active, :n_active]) ** 2
       Lkk = Gram[lam, lam] - v
       if Lkk <= min_float:  # selected atoms are dependent
-        warnings.warn(premature, RuntimeWarning, stacklevel=3)
         break
       if abs(Lkk.imag) < 0.00001: # I'm pretty sure this should be real-valued, but who knows
         L[n_active, n_active] = sqrt(Lkk.real)
