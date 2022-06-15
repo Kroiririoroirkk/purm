@@ -82,22 +82,6 @@ def naive_kmeans(k, dataset):
   return centroids
 
 
-def omp(a, y, k):
-  """Use orthogonal matching pursuit to solve the equation Ax=y such that x has at most k support size.
-  
-  Keyword arguments:
-  a -- a numpy matrix (shape (m,n))
-  y -- either a numpy vector (shape (m,)) or a numpy matrix (shape (m,l))
-  k -- the maximum support size of the output
-  precompute -- whether to perform precomputations (default True)
-  
-  Returns:
-  Either a numpy vector (shape (n,)) or a numpy matrix (shape (n,l)) depending on y"""
-  with warnings.catch_warnings():
-    warnings.simplefilter('ignore')
-    return orthogonal_mp(a, y, k)
-
-
 def ksvd(k, n, dataset, iters):
   """Generate a dictionary through the k-SVD algorithm for a dataset.
   
@@ -120,7 +104,7 @@ def ksvd(k, n, dataset, iters):
   for iter_n in range(iters):
     print('Iteration ' + str(iter_n+1))
     # Assignment step
-    x = omp(d, dataset_matr, k)
+    x = orthogonal_mp(d, dataset_matr, k)
 
     # Update step
     for i in range(n):

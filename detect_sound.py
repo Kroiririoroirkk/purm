@@ -3,8 +3,8 @@ import numpy as np
 import scipy.io.wavfile
 import sys
 
-from ksvd import omp
 from config import CallType
+from omp import orthogonal_mp
 from preprocessing import preprocess
 
 
@@ -37,7 +37,7 @@ def detect_sounds(audio_filename, dictionary_filename, k, threshold, channel_num
     segment = audio_vec[pointer : pointer+sample_length]
     if len(segment) != sample_length:
       break
-    sparse_rep = omp(d, segment, k)
+    sparse_rep = orthogonal_mp(d, segment, k)
     approximate_signal = d @ sparse_rep
     signal_strength = np.linalg.norm(approximate_signal)**2
     background = segment - approximate_signal
