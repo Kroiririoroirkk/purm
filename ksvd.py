@@ -3,8 +3,9 @@ import numpy as np
 import random
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import normalize
-from sklearn.linear_model import orthogonal_mp
 import warnings
+
+from omp import orthogonal_mp
 
 
 def l2dist(v1, v2):
@@ -81,7 +82,7 @@ def naive_kmeans(k, dataset):
   return centroids
 
 
-def omp(a, y, k, precompute=True):
+def omp(a, y, k):
   """Use orthogonal matching pursuit to solve the equation Ax=y such that x has at most k support size.
   
   Keyword arguments:
@@ -94,7 +95,7 @@ def omp(a, y, k, precompute=True):
   Either a numpy vector (shape (n,)) or a numpy matrix (shape (n,l)) depending on y"""
   with warnings.catch_warnings():
     warnings.simplefilter('ignore')
-    return orthogonal_mp(a, y, n_nonzero_coefs=k, precompute=precompute)
+    return orthogonal_mp(a, y, k)
 
 
 def ksvd(k, n, dataset, iters):

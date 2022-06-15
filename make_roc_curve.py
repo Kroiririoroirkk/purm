@@ -9,12 +9,16 @@ import matplotlib.pyplot as plt
 # sensitivities = [1.0000, 0.8678, 0.6488, 0.2149]
 # specificities = [0.1329, 0.1980, 0.2611, 0.3966]
 # thresholds = [-35, -28, -25, -20]
-thresholds = [-25, -20, -15]
+
+sensitivities = [1.0000, 0.8148, 0.3889, 0.7037, 0.6204, 0.6574]
+specificities = [0.1389, 0.4241, 0.6058, 0.5669, 0.6114, 0.5902]
 tpr = sensitivities
 fpr = [1-s for s in specificities]
 
 plt.scatter(fpr, tpr)
-for i, t in enumerate(thresholds):
-  plt.annotate(t, (fpr[i], tpr[i]))
+plt.xlim(left=0, right=1)
+plt.ylim(bottom=0, top=1)
+#for i, t in enumerate(thresholds):
+#  plt.annotate(t, (fpr[i], tpr[i]))
 
 plt.show()

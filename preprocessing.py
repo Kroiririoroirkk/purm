@@ -4,7 +4,9 @@ import numpy as np
 from scipy.signal import butter, filtfilt
 from skimage.measure import block_reduce
 
-def highpass_filter(data, cutoff=3000, fs=48000, order=5):
+from config import FREQ_CUTOFF
+
+def highpass_filter(data, cutoff=FREQ_CUTOFF[0], fs=48000, order=5):
   """Runs a Butterworth high-pass filter on the given data.
 
   Keyword arguments:
@@ -23,7 +25,7 @@ def highpass_filter(data, cutoff=3000, fs=48000, order=5):
   return filtfilt(b, a, data)
 
 
-def lowpass_filter(data, cutoff=12600, fs=48000, order=5):
+def lowpass_filter(data, cutoff=FREQ_CUTOFF[1], fs=48000, order=5):
   """Runs a Butterworth low-pass filter on the given data.
 
   Keyword arguments:

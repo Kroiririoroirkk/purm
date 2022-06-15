@@ -55,6 +55,7 @@ if __name__ == '__main__':
   audio_filename = f'{sys.argv[1]}'
   call_type = CallType.from_str(sys.argv[2])
   dictionary_filename = f'dictionaries/{call_type.filename}.csv'
+  channel = 0
   if audio_filename == 'audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav':
     channel = 8
   elif audio_filename == 'audio/aviary_2019-06-01_1559399640.000-1559400540.000_audio.wav':

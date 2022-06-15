@@ -60,8 +60,9 @@ def validate(audio_filename, channel_number, annotations_filename, call_type, ma
   annotation_lines = [(s,e) for s,e,t in annotation_lines if t == call_type]
 
   with open(output_filename, 'r') as f:
-    output_lines = [parse_output_line(s) for s in f.read().strip().split('\n')]
-  output_lines = [(s,e) for s,e,_ in output_lines]
+    output_lines_plus = [parse_output_line(s) for s in f.read().strip().split('\n')]
+    output_lines_plus = [(s,e,t) for s,e,t in output_lines_plus if t > call_type.threshold]
+  output_lines = [(s,e) for s,e,t in output_lines_plus]
 
   true_positive_count = 0
   for start_time, end_time in annotation_lines:
@@ -95,10 +96,19 @@ def validate(audio_filename, channel_number, annotations_filename, call_type, ma
       incorrect_button.on_clicked(on_incorrect_click)
       plt.show()
   else:
-    for start_time, end_time in output_lines:
-      if not within_any((start_time + end_time)/2, annotation_lines):
+    true_positives = []
+    false_positives = []
+    for start_time, end_time, sinr in output_lines_plus:
+      if within_any((start_time + end_time)/2, annotation_lines):
+        true_positives.append(sinr)
+      else:
         false_positive_count += 1
+        false_positives.append(sinr)
+      
   specificity = 1 - (false_positive_count / len(output_lines))
+
+  plt.scatter(([0]*len(true_positives))+([1]*len(false_positives)), true_positives + false_positives)
+  plt.show()
 
   return sensitivity, specificity
 
@@ -113,6 +123,7 @@ if __name__ == '__main__':
       manual = True
   except IndexError:
     pass
+  channel = 0
   if audio_filename == 'audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav':
     channel = 8
   elif audio_filename == 'audio/aviary_2019-06-01_1559399640.000-1559400540.000_audio.wav':
