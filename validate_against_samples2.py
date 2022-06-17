@@ -42,7 +42,7 @@ def validate_against_samples2(d, call_samples, non_call_samples, call_type, samp
       plt.title(f'False negative, SINR (dB): {10*math.log(sinr,10):.2f}')
       button_axes = plt.axes([0.81, 0.05, 0.1, 0.075])
       button = Button(button_axes, 'Play')
-      button.on_clicked(lambda _: sd.play(vec, sampling_rate))
+      button.on_clicked(lambda _: sd.play(vec.astype(np.int16), sampling_rate))
       plt.show()
 
   for vec in non_call_samples:
@@ -59,7 +59,7 @@ def validate_against_samples2(d, call_samples, non_call_samples, call_type, samp
         plt.title(f'False positive, SINR (dB): {10*math.log(sinr,10):.2f}')
         button_axes = plt.axes([0.81, 0.05, 0.1, 0.075])
         button = Button(button_axes, 'Play')
-        button.on_clicked(lambda _: sd.play(vec, sampling_rate))
+        button.on_clicked(lambda _: sd.play(vec.astype(np.int16), sampling_rate))
         plt.show()
 
   sensitivity = true_positive_count / len(call_samples)

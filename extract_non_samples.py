@@ -62,5 +62,5 @@ if __name__ == '__main__':
     annotations_files = sys.argv[2+divisor:2+2*divisor]
     channel_numbers = [int(s) for s in sys.argv[2+2*divisor:]]
     vec_list = get_non_sample_data(audio_files, annotations_files, channel_numbers, call_type)
-    np.savetxt(f'training_data/non_sample_{call_type.filename}.csv', vec_list, delimiter=',')
+    np.savetxt(f'training_data/non_sample_{call_type.filename}.csv', vec_list, delimiter=',', fmt='%.2f')
 

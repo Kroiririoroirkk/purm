@@ -3,7 +3,7 @@ import enum
 
 ROLLS = [0]
 
-KSVD_ITERS = 50
+KSVD_ITERS = 60
 
 FREQ_CUTOFF = (2000, 15000)
 
@@ -21,7 +21,7 @@ class DatasetType(enum.Enum):
 class CallType(enum.Enum):
   WHISTLE = ('whistle', 0.5, 3, 50, -25) # modify sparsity, dict_size, and threshold later, used to be 0.7 s
   SONG = ('song', 1.3, 2, 5, -9)
-  CHATTER = ('chatter', 1.5, 14, 60, -25)
+  CHATTER = ('chatter', 1.5, 10, 60, -22)
   BURBLE = ('burble', 0.2, 2, 3, -9)
   CHUCK = ('chuck', 0.18, 2, 5, -9)
 
@@ -49,8 +49,8 @@ class CallType(enum.Enum):
       'whsitle': CallType.WHISTLE,
       'w': CallType.WHISTLE,
       'whistle?': CallType.WHISTLE,
-      's': CallType.SONG, # try merging songs and whistles?
-      'song': CallType.SONG, # try merging songs and whistles?
+      's': CallType.SONG,
+      'song': CallType.SONG,
       'c': CallType.CHATTER,
       'chatter': CallType.CHATTER,
       'rattle': CallType.CHATTER,

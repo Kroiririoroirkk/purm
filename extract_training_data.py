@@ -106,5 +106,5 @@ if __name__ == '__main__':
     channel_numbers = [int(s) for s in sys.argv[1+2*divisor:]]
     vec_d = get_training_data(audio_files, annotations_files, channel_numbers)
     for (call_type, dataset_type), vecs in vec_d.items():
-      np.savetxt(f'training_data/{dataset_type.filename}_{call_type.filename}.csv', vecs, delimiter=',')
+      np.savetxt(f'training_data/{dataset_type.filename}_{call_type.filename}.csv', vecs, delimiter=',', fmt='%.2f')
 
