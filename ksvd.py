@@ -117,7 +117,8 @@ def ksvd(k, n, init_vecs, train_vecs, iters):
     for i in range(n):
       d[:, i] = np.zeros(d.shape[0])
       indices = [j for j in range(len(train_vecs)) if x[i][j]]
-      # TODO what if indices is empty
+      if not indices:
+        continue
       x_col = x[i, indices]
       selected_signals = dataset_matr[:, indices]
       d_col = (selected_signals - (d @ x[:, indices])) @ x_col
@@ -138,6 +139,7 @@ def ksvd(k, n, init_vecs, train_vecs, iters):
     plt.annotate(label, (trial, err))
   plt.show()
 
+  x = orthogonal_mp(d, dataset_matr, k)
   print('Final error: ' + str(frobdist(dataset_matr, d @ x) / np.linalg.norm(dataset_matr)))
 
   return d, x

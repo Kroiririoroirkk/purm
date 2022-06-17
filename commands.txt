@@ -1,0 +1,13 @@
+EXTRACTION STEP
+
+python extract_training_data.py audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav audio/aviary_2019-06-01_1559399640.000-1559400540.000_audio.wav audio/aviary_2019-06-01_1559400540.000-1559401440.000_audio.wav audio/aviary_2019-06-01_1559401440.000-1559402340.000_audio.wav audio/aviary_2019-06-01_1559412240.000-1559413140.000_audio.wav annotations/clean_chatter_aviary_2019-05-01_1556722860.000-1556723760.000.txt annotations/clean_chatter_aviary_2019-06-01_1559399640.000-1559400540.000.txt annotations/clean_chatter_aviary_2019-06-01_1559400540.000-1559401440.000.txt annotations/clean_chatter_aviary_2019-06-01_1559401440.000-1559402340.000.txt annotations/clean_chatter_aviary_2019-06-01_1559412240.000-1559413140.000.txt 8 15 0 0 0
+
+python extract_non_samples.py chatter audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav audio/aviary_2019-06-01_1559399640.000-1559400540.000_audio.wav audio/aviary_2019-06-01_1559400540.000-1559401440.000_audio.wav audio/aviary_2019-06-01_1559401440.000-1559402340.000_audio.wav audio/aviary_2019-06-01_1559412240.000-1559413140.000_audio.wav annotations/aviary_2019-05-01_1556722860.000-1556723760.000.txt annotations/aviary_2019-06-01_1559399640.000-1559400540.000.txt annotations/aviary_2019-06-01_1559400540.000-1559401440.000.txt annotations/aviary_2019-06-01_1559401440.000-1559402340.000.txt annotations/aviary_2019-06-01_1559412240.000-1559413140.000.txt 8 15 0 0 0
+
+DICTIONARY GENERATION STEP
+
+python gen_dicts.py chatter
+
+VALIDATION STEP
+
+python validate_against_samples2.py chatter training_data/validate_chatter.csv training_data/non_sample_chatter.csv
