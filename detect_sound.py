@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from scipy.fft import fft
 import scipy.io.wavfile
 import sys
 
@@ -8,7 +9,7 @@ from omp import orthogonal_mp
 from preprocessing import preprocess
 
 
-def detect_sounds(audio_filename, dictionary_filename, k, threshold, channel_number):
+def detect_sounds(audio_filename, dictionary_filename, k, threshold, channel_number, fourier):
   """Detects where specific sounds are present in an audio file given a dictionary for the sounds. Assumes the sampling rate of the audio file is the same as that used for the dictionary.
 
   Keyword arguments:
@@ -17,6 +18,7 @@ def detect_sounds(audio_filename, dictionary_filename, k, threshold, channel_num
   k -- the sparsity constraint
   threshold -- determines how sensitive the algorithm is (in dB)
   channel_number -- which channel of the audio to use (zero-indexed)
+  fourier -- whether to apply a Fourier transform to the audio
 
   Returns:
   A list of 3-tuples, where the first entry in each tuple represents the start time, the second entry represents the end time, and the third entry represents the signal-to-interference-and-noise ratio (in dB). Raises an error if the audio is not at the expected sampling rate of 48 kHz.
@@ -27,7 +29,7 @@ def detect_sounds(audio_filename, dictionary_filename, k, threshold, channel_num
   audio_vec = audio_vec[:, channel_number]
   audio_vec, sampling_rate = preprocess(audio_vec, sampling_rate)
 
-  d = np.loadtxt(dictionary_filename, delimiter=',')
+  d = np.loadtxt(dictionary_filename, delimiter=',', dtype=complex)
   sample_length = len(d[:,0])
 
   pointer = 0
@@ -37,6 +39,8 @@ def detect_sounds(audio_filename, dictionary_filename, k, threshold, channel_num
     segment = audio_vec[pointer : pointer+sample_length]
     if len(segment) != sample_length:
       break
+    if fourier:
+      segment = fft(segment, overwrite_x=True)
     sparse_rep = orthogonal_mp(d, segment, k)
     approximate_signal = d @ sparse_rep
     signal_strength = np.linalg.norm(approximate_signal)**2
@@ -60,6 +64,12 @@ if __name__ == '__main__':
     channel = 8
   elif audio_filename == 'audio/aviary_2019-06-01_1559399640.000-1559400540.000_audio.wav':
     channel = 15
-  times = detect_sounds(audio_filename, dictionary_filename, call_type.sparsity, call_type.threshold, channel)
+  fourier = False
+  try:
+    if sys.argv[3] == 'fourier':
+      fourier = True
+  except IndexError:
+    pass
+  times = detect_sounds(audio_filename, dictionary_filename, call_type.sparsity, call_type.threshold, channel, fourier)
   np.savetxt(f'./output/output.csv', times, fmt='%.2f', delimiter=',')
 

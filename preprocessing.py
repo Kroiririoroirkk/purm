@@ -11,7 +11,7 @@ def highpass_filter(data, cutoff=FREQ_CUTOFF[0], fs=48000, order=5):
 
   Keyword arguments:
   data -- the data as a numpy array
-  cutoff -- the frequency below which to attenuate (default 1500 Hz)
+  cutoff -- the frequency below which to attenuate
   fs -- the sampling rate of the audio (default 48000 Hz)
   order -- the order of the filter (default 5)
 
@@ -30,7 +30,7 @@ def lowpass_filter(data, cutoff=FREQ_CUTOFF[1], fs=48000, order=5):
 
   Keyword arguments:
   data -- the data as a numpy array
-  cutoff -- the frequency above which to attenuate (default 1500 Hz)
+  cutoff -- the frequency above which to attenuate
   fs -- the sampling rate of the audio (default 48000 Hz)
   order -- the order of the filter (default 5)
 
@@ -41,6 +41,24 @@ def lowpass_filter(data, cutoff=FREQ_CUTOFF[1], fs=48000, order=5):
   nyq = 0.5 * fs
   normal_cutoff = cutoff / nyq
   b, a = butter(order, normal_cutoff, btype='lowpass')
+  return filtfilt(b, a, data)
+
+
+def bandpass_filter(data, cutoffs=FREQ_CUTOFF, fs=48000, order=5):
+  """Runs a Butterworth low-pass filter on the given data.
+
+  Keyword arguments:
+  data -- the data as a numpy array
+  cutoffs -- the frequencies below and above which to attenuate as a 2-tuple
+  fs -- the sampling rate of the audio (default 48000 Hz)
+  order -- the order of the filter (default 5)
+
+  Returns:
+  The filtered data as a numpy array.
+  """
+  
+  nyq = 0.5 * fs
+  b, a = butter(order, [cutoffs[0]/nyq, cutoffs[1]/nyq], btype='bandpass')
   return filtfilt(b, a, data)
 
 
@@ -76,7 +94,6 @@ def preprocess(audio_vec, fs):
   Returns:
   A 2-tuple of the new audio vector and the sampling rate.
   """
-  audio_vec = highpass_filter(audio_vec)
-  audio_vec = lowpass_filter(audio_vec)
+  audio_vec = bandpass_filter(audio_vec)
   # audio_vec, fs = convert_to_baseband(audio_vec, 7800, 9600, fs, new_fs=12000)
   return audio_vec, fs

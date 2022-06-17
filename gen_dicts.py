@@ -8,7 +8,8 @@ from config import CallType, KSVD_ITERS
 for arg in sys.argv[1:]:
   call_type = CallType.from_str(arg)
   print(f'Performing k-SVD for {call_type.filename}...')
-  vecs = np.loadtxt(f'training_data/{call_type.filename}.csv', delimiter=',', dtype=int)
-  svd_dictionary, _ = ksvd.ksvd(call_type.sparsity, call_type.dict_size, vecs, KSVD_ITERS)
+  init_vecs = np.loadtxt(f'training_data/init_{call_type.filename}.csv', delimiter=',')
+  training_vecs = np.loadtxt(f'training_data/train_{call_type.filename}.csv', delimiter=',')
+  svd_dictionary, _ = ksvd.ksvd(call_type.sparsity, None, init_vecs, training_vecs, KSVD_ITERS)
   np.savetxt(f'dictionaries/{call_type.filename}.csv', svd_dictionary, delimiter=',')
 

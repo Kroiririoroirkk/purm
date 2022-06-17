@@ -1,10 +1,11 @@
 import math
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 import scipy.io.wavfile
 import sys
 
-from config import CallType, ROLLS
+from config import CallType, DatasetType, ROLLS
 from preprocessing import preprocess
 
 
@@ -46,8 +47,8 @@ def get_training_data(audio_filenames, annotations_filenames, channel_numbers):
   """Reads audio files and annotations files to obtain training data.
 
   Keyword arguments:
-  audio_filename -- a list of the filenames of the audio files
-  annotations_filename -- a list of the filenames of the annotations files
+  audio_filenames -- a list of the filenames of the audio files
+  annotations_filenames -- a list of the filenames of the annotations files
   channel_number -- which channel of the audio to use (zero-indexed)
 
   Returns:
@@ -80,7 +81,19 @@ def get_training_data(audio_filenames, annotations_filenames, channel_numbers):
         roll_frames = math.floor(duration_frames * roll)
         d[call_type].append(np.roll(sub_vec, roll_frames))
 
-  return d
+  d_with_datasettypes = dict()
+  for call_type, vecs in d.items():
+    random.shuffle(vecs)
+    partition1 = math.floor(len(vecs)*DatasetType.INIT.proportion)
+    partition2 = partition1 + math.floor(len(vecs)*DatasetType.TRAIN.proportion)
+    init_vecs = vecs[:partition1]
+    train_vecs = vecs[partition1:partition2]
+    validate_vecs = vecs[partition2:]
+    d_with_datasettypes[(call_type, DatasetType.INIT)] = init_vecs
+    d_with_datasettypes[(call_type, DatasetType.TRAIN)] = train_vecs
+    d_with_datasettypes[(call_type, DatasetType.VALIDATE)] = validate_vecs
+
+  return d_with_datasettypes
 
 
 if __name__ == '__main__':
@@ -92,6 +105,6 @@ if __name__ == '__main__':
     annotations_files = sys.argv[1+divisor:1+2*divisor]
     channel_numbers = [int(s) for s in sys.argv[1+2*divisor:]]
     vec_d = get_training_data(audio_files, annotations_files, channel_numbers)
-    for call_type, vecs in vec_d.items():
-      np.savetxt(f'training_data/{call_type.filename}.csv', vecs, delimiter=',', fmt='%d')
+    for (call_type, dataset_type), vecs in vec_d.items():
+      np.savetxt(f'training_data/{dataset_type.filename}_{call_type.filename}.csv', vecs, delimiter=',')
 

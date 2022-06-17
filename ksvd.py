@@ -82,25 +82,32 @@ def naive_kmeans(k, dataset):
   return centroids
 
 
-def ksvd(k, n, dataset, iters):
+def ksvd(k, n, init_vecs, train_vecs, iters):
   """Generate a dictionary through the k-SVD algorithm for a dataset.
   
   Keyword arguments:
   k -- the maximum support size of the sparse representations
-  n -- the size of the dictionary
-  dataset -- a list of numpy vectors (shape (m,))
+  n -- the size of the dictionary (only has an effect if n is less than the number of initialization vectors, can pass None)
+  init_vecs -- a list of numpy vectors (with each vector being a row)
+  train_vecs -- a list of numpy vectors (with each vector being a row)
   iters -- a number that determines how many loops to go through
   
   Returns:
-  A 2-tuple of an dictionary matrix (shape (m,n)) and a sparse representation matrix (shape (n,len(dataset)))
+  A 2-tuple of an dictionary matrix and a sparse representation matrix
   """
   # Initialize step
-  d = KMeans(n_clusters=n).fit(np.vstack(dataset)).cluster_centers_.transpose()
+  if n and (n < len(init_vecs)):
+    d = KMeans(n_clusters=n).fit(np.vstack(init_vecs)).cluster_centers_.transpose()
+  else:
+    n = len(init_vecs)
+    d = np.column_stack(init_vecs)
   d = normalize(d, axis=0) # Normalizes the columns (l2 norm)
-  dataset_matr = np.column_stack(dataset)
+  dataset_matr = np.column_stack(train_vecs)
 
   trials = []
   errs = []
+  labels = []
+  
   for iter_n in range(iters):
     print('Iteration ' + str(iter_n+1))
     # Assignment step
@@ -109,7 +116,8 @@ def ksvd(k, n, dataset, iters):
     # Update step
     for i in range(n):
       d[:, i] = np.zeros(d.shape[0])
-      indices = [j for j in range(len(dataset)) if x[i][j]]
+      indices = [j for j in range(len(train_vecs)) if x[i][j]]
+      # TODO what if indices is empty
       x_col = x[i, indices]
       selected_signals = dataset_matr[:, indices]
       d_col = (selected_signals - (d @ x[:, indices])) @ x_col
@@ -120,14 +128,17 @@ def ksvd(k, n, dataset, iters):
 
     # Calculate reconstruction errors
     dataset_calc = d @ x
-    for i in range(len(dataset)):
+    for i in range(len(train_vecs)):
       trials.append(iter_n)
       errs.append(l2dist(dataset_calc[:, i], dataset_matr[:, i]))
+      labels.append(i+1)
 
   plt.scatter(trials, errs)
+  for trial, err, label in zip(trials, errs, labels):
+    plt.annotate(label, (trial, err))
   plt.show()
 
-  print('Final error: ' + str(frobdist(dataset_matr, d @ x)))
+  print('Final error: ' + str(frobdist(dataset_matr, d @ x) / np.linalg.norm(dataset_matr)))
 
   return d, x
 
