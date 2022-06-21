@@ -39,13 +39,12 @@ def get_non_sample_data(audio_filenames, annotations_filenames, channel_numbers,
       end_index = timestamp_to_frame(end_time, sampling_rate)
       audio_vec[start_index:end_index] = [np.nan]*(end_index-start_index)
 
-    audio_vec = [i for i in audio_vec if not np.isnan(i)]
-
     chunk_size = timestamp_to_frame(call_type.duration, sampling_rate)
     for i in range(0, len(audio_vec), chunk_size*20): # This multiplier parameter is pretty arbitrary, change it to get more or fewer non-samples
       subvec = audio_vec[i:i+chunk_size]
+      subvec = [i for i in subvec if not np.isnan(i)]
       if len(subvec) != chunk_size:
-        break
+        continue
       l.append(subvec)
 
   random.shuffle(l)

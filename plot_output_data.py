@@ -3,12 +3,13 @@ from matplotlib.widgets import Button
 import numpy as np
 import scipy.io.wavfile
 import sounddevice as sd
+import sys
 
 from extract_training_data import timestamp_to_frame
 from validation import parse_output_line
 
 
-def plot_output_data(audio_filename='audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav', channel_number=8, output_filename='output/output.csv'):
+def plot_output_data(audio_filename, channel_number, output_filename='output/output.csv'):
   """Plots the output data as spectograms.
 
   Keyword arguments:
@@ -38,4 +39,10 @@ def plot_output_data(audio_filename='audio/aviary_2019-05-01_1556722860.000-1556
 
 
 if __name__ == '__main__':
-  plot_output_data()
+  audio_filename = sys.argv[1]
+  channel = 0
+  if audio_filename == 'audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav':
+    channel = 8
+  elif audio_filename == 'audio/aviary_2019-06-01_1559399640.000-1559400540.000_audio.wav':
+    channel = 15
+  plot_output_data(audio_filename, channel)

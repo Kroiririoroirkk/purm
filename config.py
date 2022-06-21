@@ -19,10 +19,11 @@ class DatasetType(enum.Enum):
 
 
 class CallType(enum.Enum):
-  WHISTLE = ('whistle', 0.5, 3, 50, -25) # modify sparsity, dict_size, and threshold later, used to be 0.7 s
-  SONG = ('song', 1.3, 2, 5, -9)
-  CHATTER = ('chatter', 1.5, 30, 60, -23)
+  WHISTLE = ('whistle', 0.5, 30, 362, -15.5)
+  CHATTER = ('chatter', 1.5, 30, 60, -24)
   BURBLE = ('burble', 0.2, 2, 3, -9)
+
+  SONG = ('song', 1.3, 2, 5, -9) # these two are not terribly important
   CHUCK = ('chuck', 0.18, 2, 5, -9)
 
   def __init__(self, filename, duration, sparsity, dict_size, threshold):
