@@ -5,9 +5,6 @@ ROLLS = [0]
 
 KSVD_ITERS = 50
 
-FREQ_CUTOFF = (2000, 15000)
-
-
 class DatasetType(enum.Enum):
   INIT = ('init', 0.4)
   TRAIN = ('train', 0.4)
@@ -19,20 +16,21 @@ class DatasetType(enum.Enum):
 
 
 class CallType(enum.Enum):
-  WHISTLE = ('whistle', 0.5, 30, 233, -17)
-  CHATTER = ('chatter', 1.5, 30, 60, -24)
-  BURBLE = ('burble', 0.2, 2, 3, -9)
+  WHISTLE = ('whistle', 0.5, 30, 233, -17, (2000,15000))
+  CHATTER = ('chatter', 1.5, 30, 60, -24, (2000,15000))
+  BURBLE = ('burble', 0.2, 2, 3, -9, (2000,15000))
 
-  SONG = ('song', 1.3, 0, 0, 0) # these two are not terribly important
-  CHUCK = ('chuck', 0.18, 0, 0, 0)
-  UNKNOWN = ('unknown', 0.5, 0, 0, 0)
+  SONG = ('song', 1.3, 0, 0, 0, (0,0)) # these three are not terribly important
+  CHUCK = ('chuck', 0.18, 0, 0, 0, (0,0))
+  UNKNOWN = ('unknown', 0.5, 0, 0, 0, (0,0))
 
-  def __init__(self, filename, duration, sparsity, dict_size, threshold):
+  def __init__(self, filename, duration, sparsity, dict_size, threshold, freq_cutoffs):
     self.filename = filename
     self.duration = duration # in seconds
     self.sparsity = sparsity
     self.dict_size = dict_size
     self.threshold = threshold
+    self.freq_cutoffs = freq_cutoffs # in Hz
 
   @classmethod
   def from_str(cls, s):

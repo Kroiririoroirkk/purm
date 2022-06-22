@@ -6,7 +6,7 @@ from skimage.measure import block_reduce
 
 from config import FREQ_CUTOFF
 
-def highpass_filter(data, cutoff=FREQ_CUTOFF[0], fs=48000, order=5):
+def highpass_filter(data, cutoff, fs=48000, order=5):
   """Runs a Butterworth high-pass filter on the given data.
 
   Keyword arguments:
@@ -25,7 +25,7 @@ def highpass_filter(data, cutoff=FREQ_CUTOFF[0], fs=48000, order=5):
   return filtfilt(b, a, data)
 
 
-def lowpass_filter(data, cutoff=FREQ_CUTOFF[1], fs=48000, order=5):
+def lowpass_filter(data, cutoff, fs=48000, order=5):
   """Runs a Butterworth low-pass filter on the given data.
 
   Keyword arguments:
@@ -44,7 +44,7 @@ def lowpass_filter(data, cutoff=FREQ_CUTOFF[1], fs=48000, order=5):
   return filtfilt(b, a, data)
 
 
-def bandpass_filter(data, cutoffs=FREQ_CUTOFF, fs=48000, order=5):
+def bandpass_filter(data, cutoffs, fs=48000, order=5):
   """Runs a Butterworth low-pass filter on the given data.
 
   Keyword arguments:
@@ -84,16 +84,17 @@ def convert_to_baseband(data, center_freq, bandwidth, fs, new_fs=None):
   return (baseband_signal.real, new_fs)
 
 
-def preprocess(audio_vec, fs):
+def preprocess(audio_vec, fs, call_type):
   """Preprocesses the audio vector.
 
   Keyword arguments:
   audio_vec -- the audio vector as a numpy array
   fs -- the sampling rate
+  call_type -- the CallType
 
   Returns:
   A 2-tuple of the new audio vector and the sampling rate.
   """
-  audio_vec = bandpass_filter(audio_vec)
+  audio_vec = bandpass_filter(audio_vec, call_type.freq_cutoffs)
   # audio_vec, fs = convert_to_baseband(audio_vec, 7800, 9600, fs, new_fs=12000)
   return audio_vec, fs

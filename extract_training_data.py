@@ -63,18 +63,20 @@ def get_training_data(audio_filenames, annotations_filenames, channel_numbers):
     if sampling_rate != 48000:
       raise ValueError('The audio is not at the expected sampling rate of 48 kHz.')
     audio_vec = audio_vec[:, channel_number] # ignore all channels except one
-    audio_vec, sampling_rate = preprocess(audio_vec, sampling_rate)
+    audio_vecs = dict()
+    for call_type in CallType:
+      audio_vecs[call_type] = preprocess(audio_vec, sampling_rate, call_type)
 
     with open(annotations_filename, 'r') as f:
       lines = [parse_line(s) for s in f.read().strip().split('\n')]
 
     for start_time, end_time, call_type in lines:
-      duration_frames = timestamp_to_frame(call_type.duration, sampling_rate)
+      duration_frames = timestamp_to_frame(call_type.duration, audio_vecs[call_type][1])
       avg_time = (start_time + end_time)/2
-      avg_index = timestamp_to_frame(avg_time, sampling_rate)
+      avg_index = timestamp_to_frame(avg_time, audio_vecs[call_type][1])
       start_index = avg_index - math.floor(duration_frames/2)
       end_index = start_index + duration_frames
-      sub_vec = audio_vec[start_index : end_index]
+      sub_vec = d[call_type][0][start_index : end_index]
       if len(sub_vec) != duration_frames:
         continue
       for roll in ROLLS:

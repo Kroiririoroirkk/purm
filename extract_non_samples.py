@@ -28,7 +28,7 @@ def get_non_sample_data(audio_filenames, annotations_filenames, channel_numbers,
     if sampling_rate != 48000:
       raise ValueError('The audio is not at the expected sampling rate of 48 kHz.')
     audio_vec = audio_vec[:, channel_number] # ignore all channels except one
-    audio_vec, sampling_rate = preprocess(audio_vec, sampling_rate)
+    audio_vec, sampling_rate = preprocess(audio_vec, sampling_rate, call_type)
 
     with open(annotations_filename, 'r') as f:
       lines = [parse_line(s) for s in f.read().strip().split('\n')]
