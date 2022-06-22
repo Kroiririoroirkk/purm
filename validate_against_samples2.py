@@ -28,9 +28,11 @@ def validate_against_samples2(d, call_samples, non_call_samples, call_type, samp
   false_positive_count = 0
   real_threshold = 10**(call_type.threshold/10)
 
-  for vec in call_samples:
-    sparse_rep = orthogonal_mp(d, vec, call_type.sparsity)
-    approximate_signal = d @ sparse_rep
+  call_samples_matr = np.column_stack(call_samples)
+  sparse_reps = orthogonal_mp(d, call_samples_matr, call_type.sparsity)
+
+  for i, vec in enumerate(call_samples):
+    approximate_signal = d @ sparse_reps[:,i]
     signal_strength = np.linalg.norm(approximate_signal)**2
     background = vec - approximate_signal
     background_strength = np.linalg.norm(background)**2
@@ -45,9 +47,11 @@ def validate_against_samples2(d, call_samples, non_call_samples, call_type, samp
       button.on_clicked(lambda _: sd.play(vec.astype(np.int16), sampling_rate))
       plt.show()
 
-  for vec in non_call_samples:
-    sparse_rep = orthogonal_mp(d, vec, call_type.sparsity)
-    approximate_signal = d @ sparse_rep
+  non_call_samples_matr = np.column_stack(non_call_samples)
+  neg_sparse_reps = orthogonal_mp(d, non_call_samples_matr, call_type.sparsity)
+
+  for i, vec in enumerate(non_call_samples):
+    approximate_signal = d @ neg_sparse_reps[:,i]
     signal_strength = np.linalg.norm(approximate_signal)**2
     background = vec - approximate_signal
     background_strength = np.linalg.norm(background)**2
