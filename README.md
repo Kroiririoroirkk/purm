@@ -15,7 +15,7 @@ The script `extract_training_data.py` is the main entry point for this step. It 
 
 The script `plot_call_durations.py` was used in order to determine the appropriate vector lengths for each type of call.
 
-Before data extraction, the audio is pre-processed using filters from `preprocessing.py`.
+Before data extraction, the audio is pre-processed using filters from `preprocessing.py`. The `extract_noise.py` script extracts noise samples which can be used to help determine the appropriate filter. The `plot_spectral_densities.py` script can be used to determine which frequencies are most active in a call type or noise sample. The `extract_non_samples.py` script is used to extract samples that are not of a specified call type, for use in validation.
 
 The `config.py` file allows the setting of variables that control the process such as the durations of the calls extracted and the amount to which each vector is rolled in the training data.
 
@@ -25,11 +25,11 @@ Finally, spectograms of the existing training data can be viewed using `plot_tra
 
 The script `gen_dicts.py` is the main entry point for this step. Given the type(s) of call to generate dictionaries for as its command-line argument(s), it reads from the `training_data` folder and then saves the dictionary as a CSV file to the `dictionaries` folder.
 
-Methods from the script `ksvd.py` are used to generate the dictionaries. The `ksvd_tester.py` script was used to validate the accuracy of the K-SVD implementation.
+Methods from the script `ksvd.py` are used to generate the dictionaries. The `ksvd_tester.py` script was used to validate the accuracy of the K-SVD implementation. The `omp.py` is a re-implementation of orthogonal matching pursuit from scikit-learn, edited to allow for complex values.
 
 The `config.py` file allows the setting of variables that control the process such as the durations of the calls extracted, the sparsity of the sparse representations generated, and the dictionary length.
 
-Finally, spectograms of the dictionary data can be viewed using `plot_dictionary_data.py`, which also allows the user to play the training data as audio samples.
+Finally, spectograms of the dictionary data can be viewed using `plot_dictionary_data.py`, which also allows the user to play the training data as audio samples. The script `compute_reconstruction_error.py` prints the distance between the reconstructed dataset and the original dataest using the dictionary as a proportion of the norm of the original dataset.
 
 ## Sound detection
 
@@ -45,4 +45,4 @@ The script `validation.py` is the main entry point for this step. Given an annot
 
 The script `validate_against_samples.py` is designed to test the detection algorithm against short audio samples which are already annotated. It plots false positives and false negatives as spectograms. Calling it with `noplot` as the last argument suppresses generating the plots.
 
-The `make_roc_curve.py` file allows for convenient generation of receiver operating characteristic curve graphs.
+The `make_roc_curve.py` file allows for convenient generation of receiver operating characteristic curve graphs. Similarly, the `errors.py` file allows for convenient generation of sensitivity vs X graphs.

@@ -4,8 +4,6 @@ import numpy as np
 from scipy.signal import butter, filtfilt
 from skimage.measure import block_reduce
 
-from config import FREQ_CUTOFF
-
 def highpass_filter(data, cutoff, fs=48000, order=5):
   """Runs a Butterworth high-pass filter on the given data.
 
@@ -81,7 +79,7 @@ def convert_to_baseband(data, center_freq, bandwidth, fs, new_fs=None):
   baseband_signal = np.array([datum * exp(-2j*pi*(center_freq/fs)*i) for i, datum in enumerate(data)])
   baseband_signal = lowpass_filter(baseband_signal, cutoff=new_fs, fs=fs)
   baseband_signal = block_reduce(baseband_signal, block_size=(floor(fs/new_fs),), func=np.mean)
-  return (baseband_signal.real, new_fs)
+  return baseband_signal.real, new_fs
 
 
 def preprocess(audio_vec, fs, call_type):

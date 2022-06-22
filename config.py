@@ -18,11 +18,11 @@ class DatasetType(enum.Enum):
 class CallType(enum.Enum):
   WHISTLE = ('whistle', 0.5, 30, 233, -17, (2000,15000))
   CHATTER = ('chatter', 1.5, 30, 60, -24, (2000,15000))
-  BURBLE = ('burble', 0.2, 2, 3, -9, (2000,15000))
+  BURBLE = ('burble', 0.2, 40, 59, -12, (2500,12000))
 
-  SONG = ('song', 1.3, 0, 0, 0, (0,0)) # these three are not terribly important
-  CHUCK = ('chuck', 0.18, 0, 0, 0, (0,0))
-  UNKNOWN = ('unknown', 0.5, 0, 0, 0, (0,0))
+  SONG = ('song', 1.3, 0, 0, 0, (1,1)) # these three are not terribly important
+  CHUCK = ('chuck', 0.18, 0, 0, 0, (1,1))
+  UNKNOWN = ('unknown', 0.5, 0, 0, 0, (1,1))
 
   def __init__(self, filename, duration, sparsity, dict_size, threshold, freq_cutoffs):
     self.filename = filename

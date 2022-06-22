@@ -49,7 +49,7 @@ def get_training_data(audio_filenames, annotations_filenames, channel_numbers):
   Keyword arguments:
   audio_filenames -- a list of the filenames of the audio files
   annotations_filenames -- a list of the filenames of the annotations files
-  channel_number -- which channel of the audio to use (zero-indexed)
+  channel_number -- which channels of the audio to use (zero-indexed)
 
   Returns:
   A dictionary with CallTypes as keys and lists of numpy 1D vectors as values. Raises an error if the audio is not at the expected sampling rate of 48 kHz.
@@ -76,7 +76,7 @@ def get_training_data(audio_filenames, annotations_filenames, channel_numbers):
       avg_index = timestamp_to_frame(avg_time, audio_vecs[call_type][1])
       start_index = avg_index - math.floor(duration_frames/2)
       end_index = start_index + duration_frames
-      sub_vec = d[call_type][0][start_index : end_index]
+      sub_vec = audio_vecs[call_type][0][start_index : end_index]
       if len(sub_vec) != duration_frames:
         continue
       for roll in ROLLS:
