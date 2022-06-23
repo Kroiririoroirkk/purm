@@ -5,6 +5,7 @@ import scipy.io.wavfile
 import sounddevice as sd
 import sys
 
+from config import get_channel
 from extract_training_data import timestamp_to_frame
 from validation import parse_output_line
 
@@ -40,9 +41,5 @@ def plot_output_data(audio_filename, channel_number, output_filename='output/out
 
 if __name__ == '__main__':
   audio_filename = sys.argv[1]
-  channel = 0
-  if audio_filename == 'audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav':
-    channel = 8
-  elif audio_filename == 'audio/aviary_2019-06-01_1559399640.000-1559400540.000_audio.wav':
-    channel = 15
+  channel = get_channel(audio_filename)
   plot_output_data(audio_filename, channel)

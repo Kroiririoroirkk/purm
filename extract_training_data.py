@@ -5,7 +5,7 @@ import random
 import scipy.io.wavfile
 import sys
 
-from config import CallType, DatasetType, ROLLS
+from config import CallType, DatasetType, ROLLS, get_channel
 from preprocessing import preprocess
 
 
@@ -102,10 +102,10 @@ if __name__ == '__main__':
   if len(sys.argv)%3 != 1:
     print("Error: Number of audio files, annotation files, and channel numbers do not match")
   else:
-    divisor = math.floor(len(sys.argv)/3)
+    divisor = math.floor(len(sys.argv)/2)
     audio_files = sys.argv[1:1+divisor]
-    annotations_files = sys.argv[1+divisor:1+2*divisor]
-    channel_numbers = [int(s) for s in sys.argv[1+2*divisor:]]
+    annotations_files = sys.argv[1+divisor:]
+    channel_numbers = [get_channel(fn) for fn in audio_files]
     vec_d = get_training_data(audio_files, annotations_files, channel_numbers)
     for (call_type, dataset_type), vecs in vec_d.items():
       np.savetxt(f'training_data/{dataset_type.filename}_{call_type.filename}.csv', vecs, delimiter=',', fmt='%.2f')

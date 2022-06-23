@@ -1,6 +1,11 @@
 import enum
 
 
+CHANNELS = {
+  'audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav': 8,
+  'audio/aviary_2019-06-01_1559399640.000-1559400540.000_audio.wav': 15
+}
+
 ROLLS = [0]
 
 KSVD_ITERS = 50
@@ -61,3 +66,6 @@ class CallType(enum.Enum):
     }
     return d[s]
 
+
+def get_channel(audio_filename):
+  return CHANNELS.get(audio_filename, 0)

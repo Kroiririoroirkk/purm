@@ -4,7 +4,7 @@ from scipy.fft import fft
 import scipy.io.wavfile
 import sys
 
-from config import CallType
+from config import CallType, get_channel
 from omp import orthogonal_mp
 from preprocessing import preprocess
 
@@ -56,11 +56,7 @@ def detect_sounds(audio_filename, call_type, channel_number, fourier):
 if __name__ == '__main__':
   audio_filename = f'{sys.argv[1]}'
   call_type = CallType.from_str(sys.argv[2])
-  channel = 0
-  if audio_filename == 'audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav':
-    channel = 8
-  elif audio_filename == 'audio/aviary_2019-06-01_1559399640.000-1559400540.000_audio.wav':
-    channel = 15
+  channel = get_channel(audio_filename)
   fourier = False
   try:
     if sys.argv[3] == 'fourier':

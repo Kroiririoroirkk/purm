@@ -4,7 +4,7 @@ import scipy.io.wavfile
 import sounddevice as sd
 import sys
 
-from config import CallType
+from config import CallType, get_channel
 from extract_training_data import parse_line, timestamp_to_frame
 
 
@@ -123,11 +123,7 @@ if __name__ == '__main__':
       manual = True
   except IndexError:
     pass
-  channel = 0
-  if audio_filename == 'audio/aviary_2019-05-01_1556722860.000-1556723760.000_audio.wav':
-    channel = 8
-  elif audio_filename == 'audio/aviary_2019-06-01_1559399640.000-1559400540.000_audio.wav':
-    channel = 15
+  channel = get_channel(audio_filename)
   sensitivity, specificity = validate(audio_filename, channel, annotations_filename, call_type, manual)
   print(f'The sensitivity is {sensitivity:.2%}.')
   print(f'The specificity is {specificity:.2%}.')

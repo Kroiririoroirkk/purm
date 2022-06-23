@@ -49,13 +49,13 @@ def get_noise(audio_filenames, annotations_filenames, channel_numbers):
 
 
 if __name__ == '__main__':
-  if len(sys.argv)%3 != 1:
-    print("Error: Number of audio files, annotation files, and channel numbers do not match")
+  if len(sys.argv)%2 != 1:
+    print("Error: Number of audio files and annotation files do not match")
   else:
-    divisor = math.floor(len(sys.argv)/3)
+    divisor = math.floor(len(sys.argv)/2)
     audio_files = sys.argv[1:1+divisor]
-    annotations_files = sys.argv[1+divisor:1+2*divisor]
-    channel_numbers = [int(s) for s in sys.argv[1+2*divisor:]]
+    annotations_files = sys.argv[1+divisor:]
+    channel_numbers = [get_channel(fn) for fn in audio_files]
     vec_list = get_noise(audio_files, annotations_files, channel_numbers)
     np.savetxt(f'training_data/noise.csv', vec_list, delimiter=',', fmt='%.2f')
 
