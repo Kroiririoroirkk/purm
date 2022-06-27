@@ -6,7 +6,7 @@ python extract_non_samples.py chatter audio/aviary_2019-05-01_1556722860.000-155
 
 DICTIONARY GENERATION STEP
 
-python gen_dicts.py chatter
+python gen_simple_dicts.py chatter
 
 VALIDATION STEP
 
