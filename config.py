@@ -8,7 +8,7 @@ CHANNELS = {
 
 ROLLS = [0]
 
-KSVD_ITERS = 50
+KSVD_ITERS = 80
 
 class DatasetType(enum.Enum):
   INIT = ('init', 0.4)
@@ -23,11 +23,9 @@ class DatasetType(enum.Enum):
 class CallType(enum.Enum):
   WHISTLE = ('whistle', 0.5, 30, 233, -17, (2000,15000))
   CHATTER = ('chatter', 1.5, 30, 60, -24, (2000,15000))
-  BURBLE = ('burble', 0.2, 40, 59, -12, (2500,12000))
+  BURBLE = ('burble', 0.3, 144, 288, -11, (2000,15000))
 
-  SONG = ('song', 1.3, 0, 0, 0, (1,1)) # these three are not terribly important
-  CHUCK = ('chuck', 0.18, 0, 0, 0, (1,1))
-  UNKNOWN = ('unknown', 0.5, 0, 0, 0, (1,1))
+  OTHER = ('other', 9999999, 1, 1, 0, (1,1)) # not important
 
   def __init__(self, filename, duration, sparsity, dict_size, threshold, freq_cutoffs):
     self.filename = filename
@@ -54,15 +52,15 @@ class CallType(enum.Enum):
       'whsitle': CallType.WHISTLE,
       'w': CallType.WHISTLE,
       'whistle?': CallType.WHISTLE,
-      's': CallType.SONG,
-      'song': CallType.SONG,
       'c': CallType.CHATTER,
       'chatter': CallType.CHATTER,
       'rattle': CallType.CHATTER,
       'b': CallType.BURBLE,
       'burble': CallType.BURBLE,
-      'chuck': CallType.CHUCK,
-      '?': CallType.UNKNOWN
+      's': CallType.OTHER,
+      'song': CallType.OTHER,
+      'chuck': CallType.OTHER,
+      '?': CallType.OTHER
     }
     return d[s]
 

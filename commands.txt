@@ -10,4 +10,4 @@ python gen_dicts.py chatter
 
 VALIDATION STEP
 
-python validate_against_samples2.py chatter training_data/validate_chatter.csv training_data/non_sample_chatter.csv
+python validate_against_samples.py chatter training_data/validate_chatter.csv training_data/non_sample_chatter.csv

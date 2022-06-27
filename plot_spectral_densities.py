@@ -30,6 +30,7 @@ def plot_spectral_densities(filenames, sampling_rate=48000):
   avg_spectral_density = np.mean(spectral_densities, axis=0)
   plt.semilogy(freq_vals, avg_spectral_density)
   plt.ylim([1e-4, 1e4])
+  plt.minorticks_on()
   plt.show()
 
 

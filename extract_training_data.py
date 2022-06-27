@@ -99,7 +99,7 @@ def get_training_data(audio_filenames, annotations_filenames, channel_numbers):
 
 
 if __name__ == '__main__':
-  if len(sys.argv)%3 != 1:
+  if len(sys.argv)%2 != 1:
     print("Error: Number of audio files, annotation files, and channel numbers do not match")
   else:
     divisor = math.floor(len(sys.argv)/2)

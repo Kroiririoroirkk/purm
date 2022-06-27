@@ -52,10 +52,10 @@ def get_non_sample_data(audio_filenames, annotations_filenames, channel_numbers,
 
 
 if __name__ == '__main__':
-  if len(sys.argv)%2 != 2:
+  if len(sys.argv)%2 != 0:
     print("Error: Number of audio files and annotation files do not match")
   else:
-    divisor = math.floor(len(sys.argv)/2)
+    divisor = math.floor((len(sys.argv)-2)/2)
     call_type = CallType.from_str(sys.argv[1])
     audio_files = sys.argv[2:2+divisor]
     annotations_files = sys.argv[2+divisor:]
