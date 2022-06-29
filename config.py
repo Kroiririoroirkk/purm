@@ -23,7 +23,7 @@ class DatasetType(enum.Enum):
 class CallType(enum.Enum):
   WHISTLE = ('whistle', 0.5, 240, 546, -12, (2000,15000))
   CHATTER = ('chatter', 1.5, 50, 106, -19, (2000,15000))
-  BURBLE = ('burble', 0.2, 300, 454, -8, (1000,6000))
+  BURBLE = ('burble', 0.3, 250, 454, -8, (1500,15000))
 
   OTHER = ('other', 9999999, 1, 1, 0, (1,1)) # not important
 
