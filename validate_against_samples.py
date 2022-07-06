@@ -75,7 +75,6 @@ def validate_against_samples2(d, call_samples, non_call_samples, call_type, samp
   plt.hist([pos_sinrs, neg_sinrs], bins=range(-20,350,10), label=['Whistle', 'Noise'])
   plt.legend()
   plt.show()
-  print(max(pos_sinrs))
 
   sensitivity = true_positive_count / len(call_samples)
   specificity = 1 - false_positive_count / len(non_call_samples)
