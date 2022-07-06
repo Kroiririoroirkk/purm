@@ -21,7 +21,7 @@ class DatasetType(enum.Enum):
 
 
 class CallType(enum.Enum):
-  WHISTLE = ('whistle', 0.5, 240, 546, -12, (2000,15000))
+  WHISTLE = ('whistle', 0.5, 240, 546, -7.5, (2000,15000))
   CHATTER = ('chatter', 1.5, 50, 106, -19, (2000,15000))
   BURBLE = ('burble', 0.3, 250, 454, -8, (1500,15000))
 
