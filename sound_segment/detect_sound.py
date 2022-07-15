@@ -4,9 +4,9 @@ from scipy.fft import fft
 import scipy.io.wavfile
 import sys
 
-from config import CallType, get_channel
-from omp import orthogonal_mp
-from preprocessing import preprocess
+from .config import CallType, get_channel
+from .omp import orthogonal_mp
+from .preprocessing import preprocess
 
 
 def detect_sounds(audio_filename, call_type, channel_number, fourier):

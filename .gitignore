@@ -6,7 +6,11 @@
 /share
 /video_annotations
 pyvenv.cfg
-/audio
-/dictionaries
-/training_data
-/output
+/sound_segment/audio
+/sound_segment/dictionaries
+/sound_segment/training_data
+/sound_segment/output
+/sound_localize/cameras/__pycache__
+/sound_localize/SoundLoc/__pycache__
+/sound_localize/SoundLoc/build
+/sound_segment/__pycache__
