@@ -42,9 +42,9 @@ class CameraSystem:
         self.cam_names = [calibs[key]['rostopic'] for key in sorted(calibs)]
         self.num_cams = len(self.cam_names)
         
-        cam_Ps = torch.tensor([np.array(calibs[key]['T_cam_imu']) for key in sorted(calibs)]).float().to(self.device)
-        cam_in = torch.tensor([np.array(calibs[key]['intrinsics']) for key in sorted(calibs)]).float().to(self.device)
-        cam_dt = torch.tensor([np.array(calibs[key]['distortion_coeffs']) for key in sorted(calibs)]).float().to(self.device)
+        cam_Ps = torch.tensor(np.array([calibs[key]['T_cam_imu'] for key in sorted(calibs)])).float().to(self.device)
+        cam_in = torch.tensor(np.array([calibs[key]['intrinsics'] for key in sorted(calibs)])).float().to(self.device)
+        cam_dt = torch.tensor(np.array([calibs[key]['distortion_coeffs'] for key in sorted(calibs)])).float().to(self.device)
 
         # rotation, translation, focal_length, camera_center
         self.R = cam_Ps[:, :3, :3]
