@@ -4,8 +4,10 @@
 /lib64
 /__pycache__
 /share
+/test_data
 /video_annotations
 pyvenv.cfg
+/overlay_video/__pycache__
 /sound_segment/audio
 /sound_segment/dictionaries
 /sound_segment/training_data
@@ -14,3 +16,4 @@ pyvenv.cfg
 /sound_localize/SoundLoc/__pycache__
 /sound_localize/SoundLoc/build
 /sound_segment/__pycache__
+output.pickle

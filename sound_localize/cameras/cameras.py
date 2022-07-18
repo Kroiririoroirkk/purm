@@ -150,7 +150,7 @@ class CameraSystem:
             visible_mask (n_cams, n_points, 1): whether the point is visible in each camera
 
         """
-        visible_mask = (depth > 0) * \
+        visible_mask = (depth > 0.1) * \
                         (points[:,:,0] > 0) * (points[:,:,0] < self.image_size[0]) * \
                         (points[:,:,1] > 0) * (points[:,:,1] < self.image_size[1])
 

@@ -50,7 +50,7 @@ def edit_video(filename, view, sexes):
   out = cv2.VideoWriter('edited_' + filename, FOURCC, FPS, FRAME_SIZE)
   frame_num = 0
   while cap.isOpened():
-    frame_num = frame_num + 1
+    frame_num += 1
     print(frame_num)
     ret, frame = cap.read()
     if not ret:
