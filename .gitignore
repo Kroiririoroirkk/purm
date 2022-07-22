@@ -17,3 +17,4 @@ pyvenv.cfg
 /sound_localize/SoundLoc/build
 /sound_segment/__pycache__
 *.pickle
+*.mp4
