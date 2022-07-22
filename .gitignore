@@ -16,4 +16,4 @@ pyvenv.cfg
 /sound_localize/SoundLoc/__pycache__
 /sound_localize/SoundLoc/build
 /sound_segment/__pycache__
-output.pickle
+*.pickle
