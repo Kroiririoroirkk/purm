@@ -2,10 +2,19 @@ import cv2
 import pickle
 import sys
 
-from find_calls import OutputEntry, CameraEntry, CallType2
-from overlay_video.readin import FRAME_SIZE, FOURCC, FONT, FONT_SCALE, FPS, THICKNESS
+from segment_audio import CallType2
+from localize_calls import OutputEntry, CameraEntry
+from overlay_video.readin import FRAME_SIZE, FOURCC, FONT
 
+FONT_SCALE = 5
+THICKNESS = 12
 SOUND_COLOR = (255, 0, 0)
+LETTERS = {
+  CallType2.WHISTLE: 's', # Too hard to distinguish between whistles and songs
+  CallType2.SONG: 's',
+  CallType2.CHATTER: 'c',
+  CallType2.BURBLE: 'b' # Won't use
+}
 
 def overlay_video_sound_sources(fname, out_fname, entries, tl_cam, tr_cam, bl_cam, br_cam):
   """Overlay a video with sound sources.
@@ -23,6 +32,7 @@ def overlay_video_sound_sources(fname, out_fname, entries, tl_cam, tr_cam, bl_ca
   Nothing. Overlays the video.
   """
   cap = cv2.VideoCapture(fname)
+  FPS = int(cap.get(cv2.CAP_PROP_FPS))
   out = cv2.VideoWriter(out_fname, FOURCC, FPS, FRAME_SIZE)
   vid_x, vid_y = FRAME_SIZE[0]//2, FRAME_SIZE[1]//2
   frame_num = 0
@@ -49,7 +59,7 @@ def overlay_video_sound_sources(fname, out_fname, entries, tl_cam, tr_cam, bl_ca
             pos = (x + vid_x, y + vid_y)
           else:
             continue
-          frame = cv2.putText(frame, f'{output_entry.call_type.value[0]}', pos, FONT, FONT_SCALE, SOUND_COLOR, THICKNESS)
+          frame = cv2.putText(frame, f'{LETTERS[output_entry.call_type]}', pos, FONT, FONT_SCALE, SOUND_COLOR, THICKNESS)
       else:
         break
     out.write(frame)

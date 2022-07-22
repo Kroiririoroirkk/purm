@@ -11,9 +11,9 @@ ROLLS = [0]
 KSVD_ITERS = 80
 
 class DatasetType(enum.Enum):
-  INIT = ('init', 0.4)
-  TRAIN = ('train', 0.4)
-  VALIDATE = ('validate', 0.2)
+  INIT = ('init', 0.5)
+  TRAIN = ('train', 0.5)
+  VALIDATE = ('validate', 0)
 
   def __init__(self, filename, proportion):
     self.filename = filename
@@ -21,8 +21,8 @@ class DatasetType(enum.Enum):
 
 
 class CallType(enum.Enum):
-  WHISTLE = ('whistle', 0.5, 240, 546, -10, (2000,15000))
-  CHATTER = ('chatter', 1.5, 50, 106, -18, (2000,15000))
+  WHISTLE = ('whistle', 0.5, 240, 546, -9, (2000,15000))
+  CHATTER = ('chatter', 1.5, 80, 106, -19, (2000,15000))
   BURBLE = ('burble', 0.3, 250, 454, -7, (1500,15000))
 
   OTHER = ('other', 9999999, 1, 1, 0, (1,1)) # not important
