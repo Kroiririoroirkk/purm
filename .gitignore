@@ -7,6 +7,7 @@
 /test_data
 /video_annotations
 pyvenv.cfg
+/jsons
 /overlay_video/__pycache__
 /sound_segment/audio
 /sound_segment/dictionaries
@@ -18,3 +19,5 @@ pyvenv.cfg
 /sound_segment/__pycache__
 *.pickle
 *.mp4
+*.npz
+*.png

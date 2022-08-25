@@ -65,7 +65,7 @@ def cluster_songs(burble_timestamps, whistle_timestamps):
   return song_timestamps, new_whistle_timestamps, new_burble_timestamps
 
 if __name__ == '__main__':
-  # Format: python segment_audio <audio_file.wav>
+  # Format: python segment_audio.py <audio_file.wav>
   audio_filename = sys.argv[1]
   print('Reading audio file...')
   sampling_rate, audio_vec = scipy.io.wavfile.read(audio_filename)

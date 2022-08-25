@@ -77,7 +77,7 @@ if __name__ == '__main__':
   print('Sound source file loaded.')
 
   print('Overlaying top video...')
-  overlay_video_sound_sources(top_fname, f'top_output.mp4', output_arr.copy(), 3, 2, 7, 6)
+  overlay_video_sound_sources(top_fname, 'sound_localized_top_output.mp4', output_arr.copy(), 3, 2, 7, 6)
   print('Overlaying bottom video...')
-  overlay_video_sound_sources(bottom_fname, f'bot_output.mp4', output_arr, 0, 1, 4, 5)
+  overlay_video_sound_sources(bottom_fname, 'sound_localized_bot_output.mp4', output_arr, 0, 1, 4, 5)
 

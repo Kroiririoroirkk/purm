@@ -72,9 +72,14 @@ def validate_against_samples2(d, call_samples, non_call_samples, call_type, samp
         button.on_clicked(lambda _: sd.play(vec.astype(np.int16), sampling_rate))
         plt.show()
 
-  plt.hist([pos_sinrs, neg_sinrs], bins=range(-20,350,10), label=['Whistle', 'Noise'])
+  fig = plt.figure(dpi=400)
+  fig.set_size_inches(9, 4)
+  plt.hist([pos_sinrs, neg_sinrs], label=['Call', 'Not a call'])
+  plt.title('SINRs of Validation Dataset')
+  plt.ylabel('Count')
+  plt.xlabel('SINR (dB)')
   plt.legend()
-  plt.show()
+  plt.savefig('plot.png', dpi=400)
 
   sensitivity = true_positive_count / len(call_samples)
   specificity = 1 - false_positive_count / len(non_call_samples)
