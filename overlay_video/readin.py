@@ -105,9 +105,15 @@ class Sex(enum.Enum):
 
 # --------------------- #
 
+WingspanRawEntry = namedtuple('WingspanRawEntry', ['uid', 'time', 'x1', 'y1', 'x2', 'y2', 'quarter'])
+WingspanEntry = namedtuple('WingspanEntry', ['t', 'length'])
+
+# --------------------- #
+
 def get_annotations(anno_prefix):
   annotations = dict()
   song_annotations = dict()
+  wingspan_annotations = dict()
 
   for i in range(N):
     annotations[i+1] = {
@@ -115,6 +121,10 @@ def get_annotations(anno_prefix):
       View.BOTTOM: []
     }
     song_annotations[i+1] = {
+      View.TOP: [],
+      View.BOTTOM: []
+    }
+    wingspan_annotations[i+1] = {
       View.TOP: [],
       View.BOTTOM: []
     }
@@ -126,8 +136,65 @@ def get_annotations(anno_prefix):
         elif descr['fname'].endswith('bot.mp4'):
           bottom = number
       for uid, sub_j in j['metadata'].items():
-        if len(sub_j['z']) == 1:
+        if len(sub_j['z']) == 1 and sub_j['xy'][0] == 1:
           time = sub_j['z'][0]
+          if sub_j['vid'] == top:
+            view = View.TOP
+          else:
+            view = View.BOTTOM
+          if len(sub_j['xy']) != 3:
+            raise ValueError('Unexpected behavior')
+          _, x, y = sub_j['xy']
+          x, y = int(x), int(y)
+          if x > FRAME_SIZE[0]/2:
+            if y > FRAME_SIZE[1]/2:
+              quarter = Quarter.BR
+            else:
+              quarter = Quarter.TR
+          else:
+            if y > FRAME_SIZE[1]/2:
+              quarter = Quarter.BL
+            else:
+              quarter = Quarter.TL
+          anno_type = AnnoType(sub_j['av']['2'])
+          entry = AnnoEntry(
+            uid=uid,
+            time=time,
+            anno_type=anno_type,
+            x=x,
+            y=y,
+            quarter=quarter
+          )
+          annotations[i+1][view].append(entry)
+        elif len(sub_j['z']) == 1 and sub_j['xy'][0] == 5:
+          time = sub_j['z'][0]
+          if sub_j['vid'] == top:
+            view = View.TOP
+          else:
+            view = View.BOTTOM
+          if len(sub_j['xy']) != 5:
+            raise ValueError('Unexpected behavior')
+          _, x1, y1, x2, y2 = sub_j['xy']
+          if x1 > FRAME_SIZE[0]/2:
+            if y1 > FRAME_SIZE[1]/2:
+              quarter = Quarter.BR
+            else:
+              quarter = Quarter.TR
+          else:
+            if y1 > FRAME_SIZE[1]/2:
+              quarter = Quarter.BL
+            else:
+              quarter = Quarter.TL
+          entry = WingspanRawEntry(
+            uid=uid,
+            time=time,
+            x1=x1,
+            y1=y1,
+            x2=x2,
+            y2=y2,
+            quarter=quarter
+          )
+          wingspan_annotations[i+1][view].append(entry)
         elif len(sub_j['z']) == 2:
           start_time, end_time = sub_j['z']
           song_type = SongType.from_str(sub_j['av']['1'])
@@ -141,41 +208,19 @@ def get_annotations(anno_prefix):
           continue
         else:
           continue
-        if sub_j['vid'] == top:
-          view = View.TOP
-        else:
-          view = View.BOTTOM
-        if len(sub_j['xy']) != 3:
-          raise ValueError('Unexpected behavior')
-        _, x, y = sub_j['xy']
-        x, y = int(x), int(y)
-        if x > FRAME_SIZE[0]/2:
-          if y > FRAME_SIZE[1]/2:
-            quarter = Quarter.BR
-          else:
-            quarter = Quarter.TR
-        else:
-          if y > FRAME_SIZE[1]/2:
-            quarter = Quarter.BL
-          else:
-            quarter = Quarter.TL
-        anno_type = AnnoType(sub_j['av']['2'])
-        entry = AnnoEntry(
-          uid=uid,
-          time=time,
-          anno_type=anno_type,
-          x=x,
-          y=y,
-          quarter=quarter
-        )
-        annotations[i+1][view].append(entry)
     for view in View:
       annotations[i+1][view].sort(key=lambda e: e.time)
       groups = []
       for _, g in groupby(annotations[i+1][view], key=lambda e: e.time):
         groups.append(list(g))
       annotations[i+1][view] = groups
-  return annotations, song_annotations
+
+      wingspan_annotations[i+1][view].sort(key=lambda e: e.time)
+      groups = []
+      for _, g in groupby(wingspan_annotations[i+1][view], key=lambda e: e.time):
+        groups.append(list(g))
+      wingspan_annotations[i+1][view] = groups
+  return annotations, song_annotations, wingspan_annotations
 
 
 def get_sexes(filename):
@@ -227,6 +272,59 @@ def get_3D_annotations(pos_annos, camera_file='sound_localize/cameras/aviary_201
     points_arr = [AnnoEntry3D(t=anno_arr[i][0][0], x=float(p[0]), y=float(p[1]), z=float(p[2]), anno_type=anno_arr[i][0][4]) for i, p in enumerate(points3d)]
     paths3d[bird_no] = points_arr
   return cam_sys, paths3d
+
+
+def get_wingspan_annotations(raw_wingspan_annos, camera_file='sound_localize/cameras/aviary_2019-06-01_calibration.yaml'):
+  cam_sys = CameraSystem(camera_file)
+  wingspan_annos = dict()
+  for bird_no in range(1,N+1):
+    anno_arr = []
+    print(raw_wingspan_annos[bird_no])
+    if (not raw_wingspan_annos[bird_no][View.TOP]) and (not raw_wingspan_annos[bird_no][View.BOTTOM]):
+      wingspan_annos[bird_no] = []
+      continue
+    for view, view_annos in raw_wingspan_annos[bird_no].items():
+      for group in view_annos:
+        for anno_entry in group:
+          x1 = anno_entry.x1 if anno_entry.x1 < FRAME_SIZE[0]/2 else anno_entry.x1 - FRAME_SIZE[0]/2
+          y1 = anno_entry.y1 if anno_entry.y1 < FRAME_SIZE[1]/2 else anno_entry.y1 - FRAME_SIZE[1]/2
+          x2 = anno_entry.x2 if anno_entry.x2 < FRAME_SIZE[0]/2 else anno_entry.x2 - FRAME_SIZE[0]/2
+          y2 = anno_entry.y2 if anno_entry.y2 < FRAME_SIZE[1]/2 else anno_entry.y2 - FRAME_SIZE[1]/2
+          cam = CAMERAS[(view, anno_entry.quarter)]
+          anno_arr.append((anno_entry.time, x1, y1, x2, y2, cam))
+    anno_arr.sort(key=lambda e: e[0])
+    groups = []
+    for _, g in groupby(anno_arr, lambda e: e[0]):
+      groups.append(list(g))
+    anno_arr = groups
+    points1 = []
+    points2 = []
+    for es in anno_arr:
+      point1 = []
+      point2 = []
+      for i in range(cam_sys.num_cams):
+        entry = None
+        for e in es:
+          if e[5] == i:
+            entry = e
+            break
+        if entry:
+          point_row1 = [e[1],e[2],1]
+          point_row2 = [e[3],e[4],1]
+        else:
+          point_row1 = [0,0,0]
+          point_row2 = [0,0,0]
+        point1.append(point_row1)
+        point2.append(point_row2)
+      points1.append(point1)
+      points2.append(point2)
+    points1 = FloatTensor(np.swapaxes(points1, 0, 1))
+    points1_3d = cam_sys.initialize_points(points1)
+    points2 = FloatTensor(np.swapaxes(points2, 0, 1))
+    points2_3d = cam_sys.initialize_points(points2)
+    lengths_arr = [WingspanEntry(t=anno_arr[i][0][0], length=np.linalg.norm(p2-p1)) for i, (p1, p2) in enumerate(zip(points1_3d, points2_3d))]
+    wingspan_annos[bird_no] = lengths_arr
+  return cam_sys, wingspan_annos
 
 
 def to_composite_pos(quarter, pos):

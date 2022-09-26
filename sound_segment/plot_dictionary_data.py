@@ -21,7 +21,7 @@ def plot_dictionary_data(sampling_rate=48000, call_types=CallType):
   for call_type in call_types:
     vecs = np.loadtxt(f'dictionaries/{call_type.filename}.csv', delimiter=',').transpose()
     for vec in vecs:
-      plt.specgram(vec, Fs=sampling_rate)
+      plt.specgram(cum_vec, Fs=sampling_rate)
       plt.title(call_type.filename)
       button_axes = plt.axes([0.81, 0.05, 0.1, 0.075])
       button = Button(button_axes, 'Play')

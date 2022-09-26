@@ -39,7 +39,7 @@ def validate_against_samples2(d, call_samples, non_call_samples, call_type, samp
     background_strength = np.linalg.norm(background)**2
     sinr = signal_strength/background_strength
     sinr_log = 10*math.log(sinr,10)
-    pos_sinrs.append(sinr_log)
+    pos_sinrs.append(math.log(sinr,10))
     if sinr > real_threshold:
       true_positive_count += 1
     elif plot:
@@ -61,7 +61,7 @@ def validate_against_samples2(d, call_samples, non_call_samples, call_type, samp
     background_strength = np.linalg.norm(background)**2
     sinr = signal_strength/background_strength
     sinr_log = 10*math.log(sinr,10)
-    neg_sinrs.append(sinr_log)
+    neg_sinrs.append(math.log(sinr,10))
     if sinr > real_threshold:
       false_positive_count += 1
       if plot:
@@ -74,10 +74,11 @@ def validate_against_samples2(d, call_samples, non_call_samples, call_type, samp
 
   fig = plt.figure(dpi=400)
   fig.set_size_inches(9, 4)
-  plt.hist([pos_sinrs, neg_sinrs], label=['Call', 'Not a call'])
+  plt.hist([pos_sinrs, neg_sinrs], label=['Call', 'Not a call'], bins=[-4,-3.75,-3.5,-3.25,-3,-2.75,-2.5,-2.25,-2,-1.75,-1.5,-1.25,-1])
   plt.title('SINRs of Validation Dataset')
   plt.ylabel('Count')
-  plt.xlabel('SINR (dB)')
+  plt.xlabel('$\log_{10}$ SINR')
+  plt.xticks([-4,-3.75,-3.5,-3.25,-3,-2.75,-2.5,-2.25,-2,-1.75,-1.5,-1.25,-1])
   plt.legend()
   plt.savefig('plot.png', dpi=400)
 

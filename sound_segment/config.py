@@ -12,8 +12,8 @@ KSVD_ITERS = 80
 
 class DatasetType(enum.Enum):
   INIT = ('init', 0.5)
-  TRAIN = ('train', 0.5)
-  VALIDATE = ('validate', 0)
+  TRAIN = ('train', 0.3)
+  VALIDATE = ('validate', 0.2)
 
   def __init__(self, filename, proportion):
     self.filename = filename
