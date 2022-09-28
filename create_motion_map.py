@@ -33,6 +33,8 @@ if __name__ == '__main__':
 
   fig = plt.figure()
   ax = fig.add_subplot(projection='3d')
+  #ax.set(xlim=(-0.002,6.003), ylim=(-0.077,2.376))
+  #ax.set_zlim(-0.022,2.476)
   for bird_no in MALE_BIRDS:
     _, xs, ys, zs, _ = zip(*paths3d[bird_no])
     ax.scatter(xs, ys, zs, label=f'{BIRDS[bird_no]}', marker='s', c='#ff0000')

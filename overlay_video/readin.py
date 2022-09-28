@@ -86,6 +86,7 @@ class SongType(enum.Enum):
       'song': SongType.UNKNOWN_SONG,
       'Heads Up Display': SongType.HEADS_UP,
       'heads up display': SongType.HEADS_UP,
+      'HeadUp': SongType.HEADS_UP,
       'Heads Down Display': SongType.UNKNOWN,
       '_DEFAULT': SongType.UNKNOWN,
       'Unsure': SongType.UNKNOWN
@@ -110,25 +111,20 @@ WingspanEntry = namedtuple('WingspanEntry', ['t', 'length'])
 
 # --------------------- #
 
-def get_annotations(anno_prefix):
-  annotations = dict()
-  song_annotations = dict()
-  wingspan_annotations = dict()
-
-  for i in range(N):
-    annotations[i+1] = {
-      View.TOP: [],
-      View.BOTTOM: []
-    }
-    song_annotations[i+1] = {
-      View.TOP: [],
-      View.BOTTOM: []
-    }
-    wingspan_annotations[i+1] = {
-      View.TOP: [],
-      View.BOTTOM: []
-    }
-    with open(f'{anno_prefix}{i+1:02d}.json') as f:
+def get_annotation(fname):
+  annos = {
+    View.TOP: [],
+    View.BOTTOM: []
+  }
+  song_annos = {
+    View.TOP: [],
+    View.BOTTOM: []
+  }
+  wingspan_annos = {
+    View.TOP: [],
+    View.BOTTOM: []
+  }
+  with open(fname) as f:
       j = json.load(f)
       for number, descr in j['file'].items():
         if descr['fname'].endswith('top.mp4'):
@@ -165,7 +161,7 @@ def get_annotations(anno_prefix):
             y=y,
             quarter=quarter
           )
-          annotations[i+1][view].append(entry)
+          annos[view].append(entry)
         elif len(sub_j['z']) == 1 and sub_j['xy'][0] == 5:
           time = sub_j['z'][0]
           if sub_j['vid'] == top:
@@ -194,7 +190,7 @@ def get_annotations(anno_prefix):
             y2=y2,
             quarter=quarter
           )
-          wingspan_annotations[i+1][view].append(entry)
+          wingspan_annos[view].append(entry)
         elif len(sub_j['z']) == 2:
           start_time, end_time = sub_j['z']
           song_type = SongType.from_str(sub_j['av']['1'])
@@ -204,22 +200,35 @@ def get_annotations(anno_prefix):
             end_time=end_time,
             song_type=song_type
           )
-          song_annotations[i+1][view].append(entry)
+          song_annos[view].append(entry)
           continue
         else:
           continue
-    for view in View:
-      annotations[i+1][view].sort(key=lambda e: e.time)
-      groups = []
-      for _, g in groupby(annotations[i+1][view], key=lambda e: e.time):
-        groups.append(list(g))
-      annotations[i+1][view] = groups
+  for view in View:
+    annos[view].sort(key=lambda e: e.time)
+    groups = []
+    for _, g in groupby(annos[view], key=lambda e: e.time):
+      groups.append(list(g))
+    annos[view] = groups
 
-      wingspan_annotations[i+1][view].sort(key=lambda e: e.time)
-      groups = []
-      for _, g in groupby(wingspan_annotations[i+1][view], key=lambda e: e.time):
-        groups.append(list(g))
-      wingspan_annotations[i+1][view] = groups
+    wingspan_annos[view].sort(key=lambda e: e.time)
+    groups = []
+    for _, g in groupby(wingspan_annos[view], key=lambda e: e.time):
+      groups.append(list(g))
+    wingspan_annos[view] = groups
+  return annos, song_annos, wingspan_annos
+
+
+def get_annotations(anno_prefix):
+  annotations = dict()
+  song_annotations = dict()
+  wingspan_annotations = dict()
+
+  for i in range(N):
+    annos, song_annos, wingspan_annos = get_annotation(f'{anno_prefix}{i+1:02d}.json')
+    annotations[i+1] = annos
+    song_annotations[i+1] = song_annos
+    wingspan_annotations[i+1] = wingspan_annos
   return annotations, song_annotations, wingspan_annotations
 
 
@@ -274,57 +283,52 @@ def get_3D_annotations(pos_annos, camera_file='sound_localize/cameras/aviary_201
   return cam_sys, paths3d
 
 
-def get_wingspan_annotations(raw_wingspan_annos, camera_file='sound_localize/cameras/aviary_2019-06-01_calibration.yaml'):
+def get_wingspan_annotation(raw_wingspan_anno, camera_file='sound_localize/cameras/aviary_2019-06-01_calibration.yaml'):
   cam_sys = CameraSystem(camera_file)
-  wingspan_annos = dict()
-  for bird_no in range(1,N+1):
-    anno_arr = []
-    print(raw_wingspan_annos[bird_no])
-    if (not raw_wingspan_annos[bird_no][View.TOP]) and (not raw_wingspan_annos[bird_no][View.BOTTOM]):
-      wingspan_annos[bird_no] = []
-      continue
-    for view, view_annos in raw_wingspan_annos[bird_no].items():
-      for group in view_annos:
-        for anno_entry in group:
-          x1 = anno_entry.x1 if anno_entry.x1 < FRAME_SIZE[0]/2 else anno_entry.x1 - FRAME_SIZE[0]/2
-          y1 = anno_entry.y1 if anno_entry.y1 < FRAME_SIZE[1]/2 else anno_entry.y1 - FRAME_SIZE[1]/2
-          x2 = anno_entry.x2 if anno_entry.x2 < FRAME_SIZE[0]/2 else anno_entry.x2 - FRAME_SIZE[0]/2
-          y2 = anno_entry.y2 if anno_entry.y2 < FRAME_SIZE[1]/2 else anno_entry.y2 - FRAME_SIZE[1]/2
-          cam = CAMERAS[(view, anno_entry.quarter)]
-          anno_arr.append((anno_entry.time, x1, y1, x2, y2, cam))
-    anno_arr.sort(key=lambda e: e[0])
-    groups = []
-    for _, g in groupby(anno_arr, lambda e: e[0]):
-      groups.append(list(g))
-    anno_arr = groups
-    points1 = []
-    points2 = []
-    for es in anno_arr:
-      point1 = []
-      point2 = []
-      for i in range(cam_sys.num_cams):
-        entry = None
-        for e in es:
-          if e[5] == i:
-            entry = e
-            break
-        if entry:
-          point_row1 = [e[1],e[2],1]
-          point_row2 = [e[3],e[4],1]
-        else:
-          point_row1 = [0,0,0]
-          point_row2 = [0,0,0]
-        point1.append(point_row1)
-        point2.append(point_row2)
-      points1.append(point1)
-      points2.append(point2)
-    points1 = FloatTensor(np.swapaxes(points1, 0, 1))
-    points1_3d = cam_sys.initialize_points(points1)
-    points2 = FloatTensor(np.swapaxes(points2, 0, 1))
-    points2_3d = cam_sys.initialize_points(points2)
-    lengths_arr = [WingspanEntry(t=anno_arr[i][0][0], length=np.linalg.norm(p2-p1)) for i, (p1, p2) in enumerate(zip(points1_3d, points2_3d))]
-    wingspan_annos[bird_no] = lengths_arr
-  return cam_sys, wingspan_annos
+  anno_arr = []
+  if (not raw_wingspan_anno[View.TOP]) and (not raw_wingspan_anno[View.BOTTOM]):
+    return []
+  for view, view_annos in raw_wingspan_anno.items():
+    for group in view_annos:
+      for anno_entry in group:
+        x1 = anno_entry.x1 if anno_entry.x1 < FRAME_SIZE[0]/2 else anno_entry.x1 - FRAME_SIZE[0]/2
+        y1 = anno_entry.y1 if anno_entry.y1 < FRAME_SIZE[1]/2 else anno_entry.y1 - FRAME_SIZE[1]/2
+        x2 = anno_entry.x2 if anno_entry.x2 < FRAME_SIZE[0]/2 else anno_entry.x2 - FRAME_SIZE[0]/2
+        y2 = anno_entry.y2 if anno_entry.y2 < FRAME_SIZE[1]/2 else anno_entry.y2 - FRAME_SIZE[1]/2
+        cam = CAMERAS[(view, anno_entry.quarter)]
+        anno_arr.append((anno_entry.time, x1, y1, x2, y2, cam))
+  anno_arr.sort(key=lambda e: e[0])
+  groups = []
+  for _, g in groupby(anno_arr, lambda e: e[0]):
+    groups.append(list(g))
+  anno_arr = groups
+  points1 = []
+  points2 = []
+  for es in anno_arr:
+    point1 = []
+    point2 = []
+    for i in range(cam_sys.num_cams):
+      entry = None
+      for e in es:
+        if e[5] == i:
+          entry = e
+          break
+      if entry:
+        point_row1 = [e[1],e[2],1]
+        point_row2 = [e[3],e[4],1]
+      else:
+        point_row1 = [0,0,0]
+        point_row2 = [0,0,0]
+      point1.append(point_row1)
+      point2.append(point_row2)
+    points1.append(point1)
+    points2.append(point2)
+  points1 = FloatTensor(np.swapaxes(points1, 0, 1))
+  points1_3d = cam_sys.initialize_points(points1)
+  points2 = FloatTensor(np.swapaxes(points2, 0, 1))
+  points2_3d = cam_sys.initialize_points(points2)
+  lengths_arr = [WingspanEntry(t=anno_arr[i][0][0], length=np.linalg.norm(p2-p1)) for i, (p1, p2) in enumerate(zip(points1_3d, points2_3d))]
+  return cam_sys, lengths_arr
 
 
 def to_composite_pos(quarter, pos):
