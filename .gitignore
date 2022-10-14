@@ -21,3 +21,4 @@ pyvenv.cfg
 *.mp4
 *.npz
 *.png
+*.json

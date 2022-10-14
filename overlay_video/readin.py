@@ -72,12 +72,14 @@ class SongType(enum.Enum):
       'Chatter?': SongType.CHATTER_UNSURE,
       'Male Directed Song': SongType.MALE_DIR,
       'male directed song': SongType.MALE_DIR,
+      'Male Directed': SongType.MALE_DIR,
       'Female Directed Song': SongType.FEMALE_DIR,
       'female directed song': SongType.FEMALE_DIR,
       'Male Countersong': SongType.MALE_COUNTER,
       'Male Countersong?': SongType.MALE_COUNTER,
       'Countersong': SongType.MALE_COUNTER,
       'Indirect Song': SongType.INDIRECT,
+      'Indirect': SongType.INDIRECT,
       'Undirected Song': SongType.INDIRECT,
       'Song, unsure': SongType.UNKNOWN_SONG,
       'Song, Unsure': SongType.UNKNOWN_SONG,
@@ -107,7 +109,7 @@ class Sex(enum.Enum):
 # --------------------- #
 
 WingspanRawEntry = namedtuple('WingspanRawEntry', ['uid', 'time', 'x1', 'y1', 'x2', 'y2', 'quarter'])
-WingspanEntry = namedtuple('WingspanEntry', ['t', 'length'])
+WingspanEntry = namedtuple('WingspanEntry', ['t', 'length', 'error'])
 
 # --------------------- #
 
@@ -324,10 +326,10 @@ def get_wingspan_annotation(raw_wingspan_anno, camera_file='sound_localize/camer
     points1.append(point1)
     points2.append(point2)
   points1 = FloatTensor(np.swapaxes(points1, 0, 1))
-  points1_3d = cam_sys.initialize_points(points1)
+  points1_3d, points1_err = cam_sys.triangulate_points(points1)
   points2 = FloatTensor(np.swapaxes(points2, 0, 1))
-  points2_3d = cam_sys.initialize_points(points2)
-  lengths_arr = [WingspanEntry(t=anno_arr[i][0][0], length=np.linalg.norm(p2-p1)) for i, (p1, p2) in enumerate(zip(points1_3d, points2_3d))]
+  points2_3d, points2_err = cam_sys.triangulate_points(points2)
+  lengths_arr = [WingspanEntry(t=anno_arr[i][0][0], length=np.linalg.norm(p2-p1), error=(e1.item(),e2.item())) for i, (p1, e1, p2, e2) in enumerate(zip(points1_3d, points1_err, points2_3d, points2_err))]
   return cam_sys, lengths_arr
 
 

@@ -9,4 +9,4 @@ if __name__ == '__main__':
   _,_,raw_annos = r.get_annotation(fname)
   _,annos = r.get_wingspan_annotation(raw_annos)
   for e in annos:
-    print(f'{e.t}, {e.length}')
+    print(f'{e.t}, {e.length}, {e.error}')
