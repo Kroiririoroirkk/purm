@@ -195,6 +195,10 @@ def get_annotation(fname):
           wingspan_annos[view].append(entry)
         elif len(sub_j['z']) == 2:
           start_time, end_time = sub_j['z']
+          if sub_j['vid'] == top:
+            view = View.TOP
+          else:
+            view = View.BOTTOM
           song_type = SongType.from_str(sub_j['av']['1'])
           entry = SongEntry(
             uid=uid,
