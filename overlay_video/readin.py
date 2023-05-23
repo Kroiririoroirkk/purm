@@ -66,34 +66,31 @@ class SongType(enum.Enum):
   @staticmethod
   def from_str(s):
     d = {
-      'Chatter': SongType.CHATTER,
-      'chatter': SongType.CHATTER,
-      'Chatter? I have no idea': SongType.CHATTER_UNSURE,
-      'Chatter?': SongType.CHATTER_UNSURE,
-      'Male Directed Song': SongType.MALE_DIR,
-      'male directed song': SongType.MALE_DIR,
-      'Male Directed': SongType.MALE_DIR,
-      'Female Directed Song': SongType.FEMALE_DIR,
-      'female directed song': SongType.FEMALE_DIR,
-      'Male Countersong': SongType.MALE_COUNTER,
-      'Male Countersong?': SongType.MALE_COUNTER,
-      'Countersong': SongType.MALE_COUNTER,
-      'Indirect Song': SongType.INDIRECT,
-      'Indirect': SongType.INDIRECT,
-      'Undirected Song': SongType.INDIRECT,
-      'Song, unsure': SongType.UNKNOWN_SONG,
-      'Song, Unsure': SongType.UNKNOWN_SONG,
-      'Song, not sure': SongType.UNKNOWN_SONG,
-      'Song': SongType.UNKNOWN_SONG,
-      'song': SongType.UNKNOWN_SONG,
-      'Heads Up Display': SongType.HEADS_UP,
-      'heads up display': SongType.HEADS_UP,
-      'HeadUp': SongType.HEADS_UP,
-      'Heads Down Display': SongType.UNKNOWN,
+      'CHATTER': SongType.CHATTER,
+      'CHATTER? I HAVE NO IDEA': SongType.CHATTER_UNSURE,
+      'CHATTER?': SongType.CHATTER_UNSURE,
+      'MALE DIRECTED SONG': SongType.MALE_DIR,
+      'MALE DIRECTED': SongType.MALE_DIR,
+      'FEMALE DIRECTED SONG': SongType.FEMALE_DIR,
+      'FEMALE DIRECTED': SongType.FEMALE_DIR,
+      'MALE COUNTERSONG': SongType.MALE_COUNTER,
+      'MALE COUNTERSONG?': SongType.MALE_COUNTER,
+      'COUNTERSONG': SongType.MALE_COUNTER,
+      'INDIRECT SONG': SongType.INDIRECT,
+      'INDIRECT': SongType.INDIRECT,
+      'UNDIRECTED SONG': SongType.INDIRECT,
+      'SONG, UNSURE': SongType.UNKNOWN_SONG,
+      'SONG, NOT SURE': SongType.UNKNOWN_SONG,
+      'SONG': SongType.UNKNOWN_SONG,
+      'HEADS UP DISPLAY': SongType.HEADS_UP,
+      'HEAD-UP DISPLAY': SongType.HEADS_UP,
+      'HEADS-UP DISPLAY': SongType.HEADS_UP,
+      'HEADUP': SongType.HEADS_UP,
+      'HEADS DOWN DISPLAY': SongType.UNKNOWN,
       '_DEFAULT': SongType.UNKNOWN,
-      'Unsure': SongType.UNKNOWN
+      'UNSURE': SongType.UNKNOWN
     }
-    return d[s]
+    return d[s.upper()]
 
 SongEntry = namedtuple('SongEntry', ['uid', 'start_time', 'end_time', 'song_type'])
 

@@ -25,7 +25,7 @@ class CallType(enum.Enum):
   CHATTER = ('chatter', 1.5, 80, 106, -19, (2000,15000))
   BURBLE = ('burble', 0.3, 250, 454, -7, (1500,15000))
 
-  OTHER = ('other', 9999999, 1, 1, 0, (1,1)) # not important
+  OTHER = ('other', 9999999, 1, 1, 0, (1,2)) # not important
 
   def __init__(self, filename, duration, sparsity, dict_size, threshold, freq_cutoffs):
     self.filename = filename

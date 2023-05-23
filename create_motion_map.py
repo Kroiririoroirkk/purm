@@ -9,6 +9,7 @@ BIRDS_TO_DISPLAY = list(range(1,15+1))
 
 
 if __name__ == '__main__':
+  # Usage: python create_motion_map.py <annotation_filename_prefix> <bird_id_filename> <plot_title>
   anno_filename_prefix = sys.argv[1]
   id_filename = sys.argv[2]
   title = sys.argv[3]
@@ -33,8 +34,8 @@ if __name__ == '__main__':
 
   fig = plt.figure()
   ax = fig.add_subplot(projection='3d')
-  #ax.set(xlim=(-0.002,6.003), ylim=(-0.077,2.376))
-  #ax.set_zlim(-0.022,2.476)
+  ax.set(xlim=(-0.002,6.003), ylim=(-0.077,2.376))
+  ax.set_zlim(-0.022,2.476)
   for bird_no in MALE_BIRDS:
     _, xs, ys, zs, _ = zip(*paths3d[bird_no])
     ax.scatter(xs, ys, zs, label=f'{BIRDS[bird_no]}', marker='s', c='#ff0000')

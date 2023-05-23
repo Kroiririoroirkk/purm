@@ -85,7 +85,7 @@ def edit_video(annotations, top_filename, bot_filename, sexes, cam_sys):
 
 
 if __name__ == '__main__':
-  # Usage: python edit_video <top_video_filename> <bottom_video_filename> <annotations_json_file_prefix> <sexes_filename>
+  # Usage: python edit_video.py <top_video_filename> <bottom_video_filename> <annotations_json_file_prefix> <sexes_filename>
   top_video = sys.argv[1]
   bottom_video = sys.argv[2]
   anno_prefix = sys.argv[3]
