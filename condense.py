@@ -23,15 +23,15 @@ json_file = OrderedDict([
         ('3', ''),
         ('4', '')
       ]))
+    ])),
+    ('ui', OrderedDict([
+      ('file_content_align', 'center'),
+      ('gtimeline_visible_row_count', '3'),
+      ('file_metadata_editor_visible', True),
+      ('spatial_metadata_editor_visible', True),
+      ('temporal_segment_metadata_editor_visible', True),
+      ('spatial_region_label_attribute_id', '')
     ]))
-  ])),
-  ('ui', OrderedDict([
-    ('file_content_align', 'center'),
-    ('gtimeline_visible_row_count', '3'),
-    ('file_metadata_editor_visible', True),
-    ('spatial_metadata_editor_visible', True),
-    ('temporal_segment_metadata_editor_visible', True),
-    ('spatial_region_label_attribute_id', '')
   ])),
   ('attribute', OrderedDict([
     ('1', OrderedDict([
